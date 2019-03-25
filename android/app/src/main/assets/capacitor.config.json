@@ -1,0 +1,7 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "NoteDown",
+  "bundledWebRuntime": false,
+  "webDir": "build",
+  "linuxAndroidStudioPath": "/home/mokhtar/.local/share/android-studio/bin/studio.sh"
+}
