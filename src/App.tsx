@@ -13,7 +13,7 @@ import store from './state/store';
 const App: FunctionComponent = () => (
     <StoreProvider store={store}>
       <Router>
-        <div id="app">
+        <main id="app">
           <IonApp>
             <IonSplitPane contentId="main">
               <IonPage id="main">
@@ -23,7 +23,7 @@ const App: FunctionComponent = () => (
               </IonPage>
             </IonSplitPane>
           </IonApp>
-        </div>
+        </main>
       </Router>
     </StoreProvider>
 );
