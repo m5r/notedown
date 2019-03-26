@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { IonButton, IonContent, IonText } from '@ionic/react';
+import { Link } from 'react-router-dom';
 
 const LandingContainer = styled.div`
   background-image: url('/img/landing-background.jpg');
@@ -44,7 +45,7 @@ const Title = styled.h1`
   font-size: 32px;
 `;
 
-const LandingPage: FunctionComponent = () => (
+const Landing: FunctionComponent = () => (
 	<IonContent
 		forceOverscroll={false}
 	>
@@ -70,16 +71,20 @@ const LandingPage: FunctionComponent = () => (
 
 			<LandingContent>
 				<ButtonsContainer>
-					<IonButton color="dark" expand="block" fill="clear">
-						Log in
-					</IonButton>
-					<IonButton color="dark" expand="block" fill="clear">
-						Sign up
-					</IonButton>
+					<Link to='/login'>
+						<IonButton color="dark" expand="block" fill="clear">
+							Log in
+						</IonButton>
+					</Link>
+					<Link to='/signup'>
+						<IonButton color="dark" expand="block" fill="clear">
+							Sign up
+						</IonButton>
+					</Link>
 				</ButtonsContainer>
 			</LandingContent>
 		</LandingContainer>
 	</IonContent>
 );
 
-export default LandingPage;
+export default Landing;
