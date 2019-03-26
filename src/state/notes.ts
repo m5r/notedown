@@ -8,6 +8,7 @@ export enum NoteType {
 export type Note = {
 	id: string;
 	type: NoteType;
+	title: string;
 	content: string;
 };
 
