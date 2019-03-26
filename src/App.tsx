@@ -1,11 +1,13 @@
 import React, { FunctionComponent } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { IonApp, IonSplitPane, IonPage } from '@ionic/react';
 import { StoreProvider } from 'easy-peasy';
 
 import Landing from './pages/landing';
 import Login from './pages/login';
 import Signup from './pages/signup';
+import Logout from './pages/logout';
+import Home from './pages/home';
 
 import store from './state/store';
 import FirebaseContext from './firebase/context';
@@ -23,9 +25,12 @@ const App: FunctionComponent = () => (
 						<IonSplitPane contentId="main">
 							<IonPage id="main">
 								<Switch>
-									<Route path="/login" component={Login} />
-									<Route path="/signup" component={Signup} />
-									<Route path="/" component={Landing} />
+									<Route path="/" component={Landing} exact />
+									<Route path="/login" component={Login} exact />
+									<Route path="/signup" component={Signup} exact />
+									<Route path="/logout" component={Logout} exact />
+									<Route path="/home" component={Home} exact />
+									<Route path="*" render={() => <Redirect to="/" />} />
 								</Switch>
 							</IonPage>
 						</IonSplitPane>

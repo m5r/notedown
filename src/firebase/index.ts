@@ -32,18 +32,6 @@ export class Firebase {
 	async logOut() {
 		return this.auth.signOut();
 	}
-
-	async resetPassword(email: string) {
-		return this.auth.sendPasswordResetEmail(email);
-	}
-
-	async updatePassword(password: string) {
-		if (!this.auth.currentUser) {
-			return;
-		}
-
-		return this.auth.currentUser.updatePassword(password);
-	}
 }
 
 export default Firebase;

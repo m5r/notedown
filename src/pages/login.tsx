@@ -14,8 +14,10 @@ import {
 	IonTitle,
 	IonToolbar,
 } from '@ionic/react';
+
 import FirebaseContext from '../firebase/context';
 import { useActions } from '../state/store';
+import useAuthentication from '../firebase/hooks';
 
 const LoginContainer = styled.div`
   background-image: url('/img/landing-background.jpg');
@@ -44,6 +46,8 @@ const LoginContent = styled.div`
 `;
 
 const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
+	useAuthentication();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const firebase = useContext(FirebaseContext);

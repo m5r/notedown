@@ -1,12 +1,11 @@
-import React, { FunctionComponent, useContext, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { IonButton, IonContent, IonText } from '@ionic/react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import StartingPageContainer from '../components/starting-page-container';
 import StartingPageContent from '../components/starting-page-content';
-import FirebaseContext from '../firebase/context';
-import { useActions } from '../state/store';
+import useAuthentication from '../firebase/hooks';
 
 const ButtonsContainer = styled.div`
   display: grid;
@@ -24,20 +23,8 @@ const Title = styled.h1`
   font-size: 32px;
 `;
 
-const Landing: FunctionComponent<RouteComponentProps> = ({ history }) => {
-	const firebase = useContext(FirebaseContext);
-	const setUser = useActions(actions => actions.user.setUser);
-
-	useEffect(() => {
-		const unsubscribe = firebase.auth.onAuthStateChanged(((user) => {
-			if (user) {
-				setUser(user);
-				history.replace('/home');
-			}
-		}));
-
-		return unsubscribe;
-	}, []);
+const Landing: FunctionComponent = () => {
+	useAuthentication();
 
 	return (
 		<IonContent
@@ -82,4 +69,4 @@ const Landing: FunctionComponent<RouteComponentProps> = ({ history }) => {
 	);
 }
 
-export default withRouter(Landing);
+export default Landing;

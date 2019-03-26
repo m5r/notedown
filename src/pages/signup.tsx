@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useContext, useState } from 'react';
-import styled from 'styled-components';
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import {
 	IonBackButton,
@@ -11,16 +10,20 @@ import {
 	IonItem,
 	IonLabel,
 	IonList,
-	IonMenuButton,
 	IonTitle,
 	IonToolbar,
 } from '@ionic/react';
-import FirebaseContext from '../firebase/context';
+
 import StartingPageContainer from '../components/starting-page-container';
 import StartingPageContent from '../components/starting-page-content';
+
+import FirebaseContext from '../firebase/context';
 import { useActions } from '../state/store';
+import useAuthentication from '../firebase/hooks';
 
 const Signup: FunctionComponent<RouteComponentProps> = ({ history }) => {
+	useAuthentication();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const firebase = useContext(FirebaseContext);
