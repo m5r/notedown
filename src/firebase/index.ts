@@ -17,6 +17,8 @@ export class Firebase {
 		app.initializeApp(config);
 
 		this.auth = app.auth();
+
+		(window as any).fbase = this;
 	}
 
 	async createUser(email: string, password: string) {

@@ -11,47 +11,24 @@ import {
 	IonItem,
 	IonLabel,
 	IonList,
+	IonMenuButton,
 	IonTitle,
 	IonToolbar,
 } from '@ionic/react';
 import FirebaseContext from '../firebase/context';
+import StartingPageContainer from '../components/starting-page-container';
+import StartingPageContent from '../components/starting-page-content';
 import { useActions } from '../state/store';
 
-const LoginContainer = styled.div`
-  background-image: url('/img/landing-background.jpg');
-  background-size: cover;
-  background-position: -100px 0;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  align-items: end;
-`;
-
-const LoginContent = styled.div`
-  text-align: center;
-  width: 100%;
-  
-  &:last-child {
-    align-self: center;
-  }
-`;
-
-const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
+const Signup: FunctionComponent<RouteComponentProps> = ({ history }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const firebase = useContext(FirebaseContext);
 	const setUser = useActions(actions => actions.user.setUser);
 
-	async function submitLoginForm() {
+	async function submitSignupForm() {
 		try {
-			const userCredential = await firebase.logIn(email, password);
+			const userCredential = await firebase.createUser(email, password);
 			setUser(userCredential.user);
 			history.replace('/home')
 		} catch (e) {
@@ -71,14 +48,14 @@ const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 							color='dark'
 						/>
 					</IonButtons>
-					<IonTitle>Login</IonTitle>
+					<IonTitle>Signup</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent
 				forceOverscroll={false}
 			>
-				<LoginContainer>
-					<LoginContent>
+				<StartingPageContainer>
+					<StartingPageContent>
 						<form onSubmit={e => e.preventDefault()} noValidate>
 							<IonList no-lines>
 								<IonItem>
@@ -104,17 +81,17 @@ const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 								</IonItem>
 							</IonList>
 						</form>
-					</LoginContent>
+					</StartingPageContent>
 
-					<LoginContent>
-						<IonButton onClick={submitLoginForm} color="dark" expand="block" fill="clear" type="submit">
-							Log in
+					<StartingPageContent>
+						<IonButton onClick={submitSignupForm} color="dark" expand="block" fill="clear" type="submit">
+							Sign up
 						</IonButton>
-					</LoginContent>
-				</LoginContainer>
+					</StartingPageContent>
+				</StartingPageContainer>
 			</IonContent>
 		</>
 	);
 };
 
-export default withRouter(Login);
+export default withRouter(Signup);

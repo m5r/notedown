@@ -5,6 +5,7 @@ import { StoreProvider } from 'easy-peasy';
 
 import Landing from './pages/landing';
 import Login from './pages/login';
+import Signup from './pages/signup';
 
 import store from './state/store';
 import FirebaseContext from './firebase/context';
@@ -23,6 +24,7 @@ const App: FunctionComponent = () => (
 							<IonPage id="main">
 								<Switch>
 									<Route path="/login" component={Login} />
+									<Route path="/signup" component={Signup} />
 									<Route path="/" component={Landing} />
 								</Switch>
 							</IonPage>

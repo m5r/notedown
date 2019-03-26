@@ -1,33 +1,12 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { IonButton, IonContent, IonText } from '@ionic/react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-const LandingContainer = styled.div`
-  background-image: url('/img/landing-background.jpg');
-  background-size: cover;
-  background-position: -100px 0;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  align-items: end;
-`;
-
-const LandingContent = styled.div`
-  text-align: center;
-  width: 100%;
-  
-  &:last-child {
-    align-self: center;
-  }
-`;
+import StartingPageContainer from '../components/starting-page-container';
+import StartingPageContent from '../components/starting-page-content';
+import FirebaseContext from '../firebase/context';
+import { useActions } from '../state/store';
 
 const ButtonsContainer = styled.div`
   display: grid;
@@ -45,46 +24,62 @@ const Title = styled.h1`
   font-size: 32px;
 `;
 
-const Landing: FunctionComponent = () => (
-	<IonContent
-		forceOverscroll={false}
-	>
-		<LandingContainer>
-			<LandingContent>
-				<IonText color="dark">
-					<Title>Notedown</Title>
-					<p>Remember everything that matters.</p>
-				</IonText>
-			</LandingContent>
+const Landing: FunctionComponent<RouteComponentProps> = ({ history }) => {
+	const firebase = useContext(FirebaseContext);
+	const setUser = useActions(actions => actions.user.setUser);
 
-			<LandingContent>
-				<p>Get started</p>
-				<ButtonsContainer>
-					<IonButton class="landing-button" color="light">
-						<LogoButton src="/img/facebook.svg" />
-					</IonButton>
-					<IonButton class="landing-button" color="light">
-						<LogoButton src="/img/google.svg" />
-					</IonButton>
-				</ButtonsContainer>
-			</LandingContent>
+	useEffect(() => {
+		const unsubscribe = firebase.auth.onAuthStateChanged(((user) => {
+			if (user) {
+				setUser(user);
+				history.replace('/home');
+			}
+		}));
 
-			<LandingContent>
-				<ButtonsContainer>
-					<Link to='/login'>
-						<IonButton color="dark" expand="block" fill="clear">
-							Log in
+		return unsubscribe;
+	}, []);
+
+	return (
+		<IonContent
+			forceOverscroll={false}
+		>
+			<StartingPageContainer>
+				<StartingPageContent>
+					<IonText color="dark">
+						<Title>Notedown</Title>
+						<p>Remember everything that matters.</p>
+					</IonText>
+				</StartingPageContent>
+
+				<StartingPageContent>
+					<p>Get started</p>
+					<ButtonsContainer>
+						<IonButton class="landing-button" color="light">
+							<LogoButton src="/img/facebook.svg" />
 						</IonButton>
-					</Link>
-					<Link to='/signup'>
-						<IonButton color="dark" expand="block" fill="clear">
-							Sign up
+						<IonButton class="landing-button" color="light">
+							<LogoButton src="/img/google.svg" />
 						</IonButton>
-					</Link>
-				</ButtonsContainer>
-			</LandingContent>
-		</LandingContainer>
-	</IonContent>
-);
+					</ButtonsContainer>
+				</StartingPageContent>
 
-export default Landing;
+				<StartingPageContent>
+					<ButtonsContainer>
+						<Link to='/login'>
+							<IonButton color="dark" expand="block" fill="clear">
+								Log in
+							</IonButton>
+						</Link>
+						<Link to='/signup'>
+							<IonButton color="dark" expand="block" fill="clear">
+								Sign up
+							</IonButton>
+						</Link>
+					</ButtonsContainer>
+				</StartingPageContent>
+			</StartingPageContainer>
+		</IonContent>
+	);
+}
+
+export default withRouter(Landing);
