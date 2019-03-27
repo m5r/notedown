@@ -5,6 +5,7 @@ import Loading from '../components/loading';
 
 import { useAuthentication } from '../firebase/hooks';
 import { useActions, useStore } from '../state/store';
+import NotesList from '../components/notes-list';
 
 // TODO: liste des notes sous forme de masonry
 // TODO: footer avec "Take a note..."
@@ -49,7 +50,7 @@ const Home: FunctionComponent = () => {
 				{
 					isLoading ? 
 					<Loading /> :
-					'Home'
+					<NotesList />
 				}
 			</IonContent>
 		</>

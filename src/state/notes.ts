@@ -27,7 +27,11 @@ export type NotesModel = {
 const notes: NotesModel = {
 	items: [],
 	isFetching: false,
-	fetchNotes: thunk(async (actions, userUid) => {
+	fetchNotes: thunk(async (actions, userUid, { getState }) => {
+		if (getState().isFetching) {
+			return;
+		}
+
 		actions.setIsFetching(true);
 
 		const notes = await firebaseService.fetchNotes(userUid);

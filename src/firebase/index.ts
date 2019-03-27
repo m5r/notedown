@@ -46,7 +46,16 @@ export class FirebaseService {
 		const collection = this.db.collection('notes');
 		const query = collection.where('owner', '==', userUid);
 		const querySnapshot = await query.get();
-		const notes = querySnapshot.docs.map(doc => doc.data() as Note);
+		const notes = querySnapshot.docs.map((document) => {
+			const data = document.data();
+			const id = document.id;
+			const note = {
+				...data,
+				id,
+			} as Note;
+
+			return note;
+		});
 
 		return notes;
 	}

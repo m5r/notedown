@@ -7,12 +7,12 @@ import { useActions } from '../state/store';
 export const useAuthentication = () => {
 	const firebase = useContext(FirebaseServiceContext);
 	const setUser = useActions(actions => actions.user.setUser);
+	const fetchNotes = useActions(actions => actions.notes.fetchNotes);
 	const { history } = useReactRouter();
 
 	useEffect(() => firebase.auth.onAuthStateChanged(((user) => {
-		console.log('user', user);
-
 		if (user) {
+			fetchNotes(user.uid);
 			setUser(user);
 			return history.replace('/home');
 		}
