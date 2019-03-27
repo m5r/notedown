@@ -15,9 +15,9 @@ import {
 	IonToolbar,
 } from '@ionic/react';
 
-import FirebaseContext from '../firebase/context';
+import FirebaseServiceContext from '../firebase/context';
 import { useActions } from '../state/store';
-import useAuthentication from '../firebase/hooks';
+import { useAuthentication } from '../firebase/hooks';
 
 const LoginContainer = styled.div`
   background-image: url('/img/landing-background.jpg');
@@ -50,7 +50,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const firebase = useContext(FirebaseContext);
+	const firebase = useContext(FirebaseServiceContext);
 	const setUser = useActions(actions => actions.user.setUser);
 
 	async function submitLoginForm() {
@@ -78,6 +78,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 					<IonTitle>Login</IonTitle>
 				</IonToolbar>
 			</IonHeader>
+
 			<IonContent
 				forceOverscroll={false}
 			>

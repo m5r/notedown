@@ -1,4 +1,6 @@
-import { Action, action } from 'easy-peasy';
+import { Action, Thunk, action, thunk } from 'easy-peasy';
+
+import firebaseService from '../firebase';
 
 export enum NoteType {
 	List = 'list',
@@ -7,6 +9,7 @@ export enum NoteType {
 
 export type Note = {
 	id: string;
+	owner: string;
 	type: NoteType;
 	title: string;
 	content: string;
@@ -14,14 +17,32 @@ export type Note = {
 
 export type NotesModel = {
 	items: Note[];
-	add: Action<NotesModel, Note>
+	isFetching: boolean;
+
+	fetchNotes: Thunk<NotesModel, string>
+	setNotes: Action<NotesModel, Note[]>
+	setIsFetching: Action<NotesModel, boolean>
 }
 
 const notes: NotesModel = {
 	items: [],
-	add: action((state, payload) => {
-		state.items.push(payload);
+	isFetching: false,
+	fetchNotes: thunk(async (actions, userUid) => {
+		actions.setIsFetching(true);
+
+		const notes = await firebaseService.fetchNotes(userUid);
+		actions.setNotes(notes);
+
+		actions.setIsFetching(false);
 	}),
+	setNotes: action((state, payload) => ({
+		...state,
+		items: payload,
+	})),
+	setIsFetching: action((state, payload) => ({
+		...state,
+		isFetching: payload,
+	})),
 };
 
 export default notes;

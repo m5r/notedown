@@ -10,15 +10,15 @@ import Logout from './pages/logout';
 import Home from './pages/home';
 
 import store from './state/store';
-import FirebaseContext from './firebase/context';
+import FirebaseServiceContext from './firebase/context';
 
-import Firebase from './firebase';
+import firebaseService from './firebase';
 import '@ionic/core/css/core.css';
 import '@ionic/core/css/ionic.bundle.css';
 
 const App: FunctionComponent = () => (
 	<StoreProvider store={store}>
-		<FirebaseContext.Provider value={new Firebase()}>
+		<FirebaseServiceContext.Provider value={firebaseService}>
 			<Router>
 				<main id="app">
 					<IonApp>
@@ -37,7 +37,7 @@ const App: FunctionComponent = () => (
 					</IonApp>
 				</main>
 			</Router>
-		</FirebaseContext.Provider>
+		</FirebaseServiceContext.Provider>
 	</StoreProvider>
 );
 

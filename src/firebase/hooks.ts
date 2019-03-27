@@ -1,11 +1,11 @@
 import { useContext, useEffect } from 'react';
 import useReactRouter from 'use-react-router';
 
-import FirebaseContext from './context';
+import FirebaseServiceContext from './context';
 import { useActions } from '../state/store';
 
-const useAuthentication = () => {
-	const firebase = useContext(FirebaseContext);
+export const useAuthentication = () => {
+	const firebase = useContext(FirebaseServiceContext);
 	const setUser = useActions(actions => actions.user.setUser);
 	const { history } = useReactRouter();
 
@@ -25,5 +25,3 @@ const useAuthentication = () => {
 		}
 	})), [history]);
 };
-
-export default useAuthentication;

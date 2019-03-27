@@ -1,6 +1,6 @@
 import { createContext } from 'react';
-import Firebase from './index';
+import firebaseService from './index';
 
-const FirebaseContext = createContext<Firebase>(null as any);
+const FirebaseServiceContext = createContext<typeof firebaseService>(null as any);
 
-export default FirebaseContext;
+export default FirebaseServiceContext;

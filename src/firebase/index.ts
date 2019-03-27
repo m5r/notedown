@@ -1,5 +1,8 @@
 import app from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/firestore';
+
+import { Note } from '../state/notes';
 
 const config = {
 	apiKey: 'AIzaSyDoLLKnWr1jOJpA6PrQ81ooZGXVq4eZlE0',
@@ -10,17 +13,22 @@ const config = {
 	messagingSenderId: '353275719484',
 };
 
-export class Firebase {
+export class FirebaseService {
 	auth: app.auth.Auth;
+	db: app.firestore.Firestore;
 
 	constructor() {
-		app.initializeApp(config);
+		if (!app.apps.length) {
+			app.initializeApp(config);
+		}
 
 		this.auth = app.auth();
+		this.db = app.firestore();
 
 		(window as any).fbase = this;
 	}
 
+	/* auth methods */
 	async createUser(email: string, password: string) {
 		return this.auth.createUserWithEmailAndPassword(email, password);
 	}
@@ -32,6 +40,16 @@ export class Firebase {
 	async logOut() {
 		return this.auth.signOut();
 	}
+
+	/* db methods */
+	async fetchNotes(userUid: string): Promise<Note[]> {
+		const collection = this.db.collection('notes');
+		const query = collection.where('owner', '==', userUid);
+		const querySnapshot = await query.get();
+		const notes = querySnapshot.docs.map(doc => doc.data() as Note);
+
+		return notes;
+	}
 }
 
-export default Firebase;
+export default new FirebaseService();

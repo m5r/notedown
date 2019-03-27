@@ -1,6 +1,10 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
+import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/react';
 
-import useAuthentication from '../firebase/hooks';
+import Loading from '../components/loading';
+
+import { useAuthentication } from '../firebase/hooks';
+import { useActions, useStore } from '../state/store';
 
 // TODO: liste des notes sous forme de masonry
 // TODO: footer avec "Take a note..."
@@ -14,10 +18,41 @@ import useAuthentication from '../firebase/hooks';
 const Home: FunctionComponent = () => {
 	useAuthentication();
 
+	const fetchNotes = useActions(actions => actions.notes.fetchNotes);
+
+	const user = useStore(state => state.user.user);
+	const isFetching = useStore(state => state.notes.isFetching);
+
+	const isLoading = !user || isFetching;
+
+	useEffect(() => {
+		if (!user) {
+			return;
+		}
+
+		fetchNotes(user.uid);
+	}, [user]);
+
 	return (
-		<div>
-			Home
-		</div>
+		<>
+			<IonHeader>
+				<IonToolbar>
+					<IonTitle>
+						Notedown
+					</IonTitle>
+				</IonToolbar>
+			</IonHeader>
+
+			<IonContent
+				forceOverscroll={false}
+			>
+				{
+					isLoading ? 
+					<Loading /> :
+					'Home'
+				}
+			</IonContent>
+		</>
 	);
 };
 

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import StartingPageContainer from '../components/starting-page-container';
 import StartingPageContent from '../components/starting-page-content';
-import useAuthentication from '../firebase/hooks';
+import { useAuthentication } from '../firebase/hooks';
 
 const ButtonsContainer = styled.div`
   display: grid;
