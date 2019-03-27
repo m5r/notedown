@@ -18,3 +18,8 @@ ion-list, ion-item {
     --background: transparent;
     --ion-item-background: rgba(255, 255, 255, .2);
 }
+
+a {
+    text-decoration: none;
+    color: #202124 !important;
+}

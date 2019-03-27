@@ -1,9 +1,14 @@
 import React, { FunctionComponent } from 'react';
+import styled from 'styled-components';
+
+const _Loading = styled.div`
+    height: 100%;
+`;
 
 const Loading: FunctionComponent = () => (
-    <div>
+    <_Loading>
         Loading...
-    </div>
+    </_Loading>
 );
 
 export default Loading;

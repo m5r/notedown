@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { Note } from '../state/notes';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 type Props = {
     note: Note;
@@ -20,7 +21,7 @@ const Content = styled.p`
 `;
 
 const Card = styled.div`
-    min-height: 30px;
+    min-height: 120px;
     padding: 12px 16px;
     border: 1px solid #e0e0e0;
     overflow: hidden;
@@ -31,14 +32,16 @@ const Card = styled.div`
 
 const NoteListItem: FunctionComponent<Props> = ({ note }) => {
     return (
-        <Card>
-            <Title>
-                {note.title}
-            </Title>
-            <Content>
-                {note.content}
-            </Content>
-        </Card>
+        <Link to={`/note/${note.id}`}>
+            <Card>
+                <Title>
+                    {note.title}
+                </Title>
+                <Content>
+                    {note.content}
+                </Content>
+            </Card>
+        </Link>
     );
 }
 

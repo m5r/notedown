@@ -14,7 +14,12 @@ export const useAuthentication = () => {
 		if (user) {
 			fetchNotes(user.uid);
 			setUser(user);
-			return history.replace('/home');
+			
+			if (location.pathname === '/') {
+				return history.replace('/home');
+			}
+
+			return;
 		}
 
 		if (

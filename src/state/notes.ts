@@ -1,4 +1,4 @@
-import { Action, Thunk, action, thunk } from 'easy-peasy';
+import { Action, Thunk, Select, action, thunk, select } from 'easy-peasy';
 
 import firebaseService from '../firebase';
 
@@ -19,9 +19,9 @@ export type NotesModel = {
 	items: Note[];
 	isFetching: boolean;
 
-	fetchNotes: Thunk<NotesModel, string>
-	setNotes: Action<NotesModel, Note[]>
-	setIsFetching: Action<NotesModel, boolean>
+	fetchNotes: Thunk<NotesModel, string>;
+	setNotes: Action<NotesModel, Note[]>;
+	setIsFetching: Action<NotesModel, boolean>;
 }
 
 const notes: NotesModel = {
