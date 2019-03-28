@@ -8,11 +8,12 @@ import HomeFooter from '../components/home-footer';
 import { useAuthentication } from '../firebase/hooks';
 import { useActions, useStore } from '../state/store';
 
-// TODO: liste des notes sous forme de masonry
-// TODO: footer avec "Take a note..."
+// HALF-DONE: liste des notes sous forme de masonry
+// DONE: footer avec "Take a note..."
 // TODO: créer une note
+// TODO: modifier une note
 // TODO: swipe left/right les notes pour les supprimer
-// TODO: footer avec "☑"
+// DONE: footer avec "☑"
 // TODO: créer une liste
 // TODO: toggle switch format masonry/liste
 // TODO: recherche
