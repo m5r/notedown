@@ -10,7 +10,7 @@ import { useActions, useStore } from '../state/store';
 
 // HALF-DONE: liste des notes sous forme de masonry
 // DONE: footer avec "Take a note..."
-// TODO: créer une note
+// DONE: créer une note
 // TODO: modifier une note
 // TODO: swipe left/right les notes pour les supprimer
 // DONE: footer avec "☑"

@@ -10,6 +10,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+ion-toolbar.header-toolbar {
+    --ion-toolbar-color: #202124;
+    --ion-toolbar-border-color: transparent;
+}
+
+ion-toolbar.header-toolbar ion-icon {
+    --ion-color-base: #80868b !important;
+}
+
 ion-button.landing-button {
     --ion-color-base: rgba(255, 255, 255, .5) !important;
 }

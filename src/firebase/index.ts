@@ -59,6 +59,14 @@ export class FirebaseService {
 
 		return notes;
 	}
+
+	async setNote(note: Note) {
+		console.log('fbase set note');
+		const collection = this.db.collection('notes');
+		const query = collection.doc(note.id);
+
+		return query.set(note);
+	}
 }
 
 export default new FirebaseService();

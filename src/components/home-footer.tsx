@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { IonIcon } from '@ionic/react';
+import { Link } from 'react-router-dom';
 
 const _HomeFooter = styled.footer`
     display: flex;
@@ -26,9 +27,11 @@ const Label = styled.div`
 
 const HomeFooter: FunctionComponent = () => (
     <_HomeFooter>
-        <Label>
-            Take a note...
-        </Label>
+        <Link to="/note/new">
+            <Label>
+                Take a note...
+            </Label>
+        </Link>
         <div>
             <IonIcon size="large" name="checkbox-outline" />
         </div>

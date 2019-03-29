@@ -10,11 +10,11 @@ import { useStore } from '../state/store';
 
 const _NotesList = styled.div`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, calc(50% - 6px));
     grid-template-rows: max-content;
     grid-column-gap: 8px;
     grid-row-gap: 8px;
-    padding: 8px 16px;
+    padding: 16px 16px 32px;
     overflow-y: auto;
     flex: 1;
     padding-bottom: 30px;
@@ -42,7 +42,7 @@ const NotesList: FunctionComponent = () => {
 
 	return (
 		<_NotesList>
-			{Array(20).fill(notes[0]).map(note => (
+			{notes.map(note => (
 				<NoteListItem key={note.id} note={note} />
 			))}
 			<BottomFade />

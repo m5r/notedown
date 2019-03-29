@@ -12,6 +12,7 @@ const Title = styled.div`
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.5rem;
+    word-break: break-word;
 `;
 
 const Content = styled.p`

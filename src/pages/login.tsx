@@ -2,18 +2,15 @@ import React, { FunctionComponent, useContext, useState } from 'react';
 import styled from 'styled-components';
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import {
-	IonBackButton,
 	IonButton,
-	IonButtons,
 	IonContent,
-	IonHeader,
 	IonInput,
 	IonItem,
 	IonLabel,
 	IonList,
-	IonTitle,
-	IonToolbar,
 } from '@ionic/react';
+
+import AppUnauthentifiedHeader from '../components/app-unauthentified-header';
 
 import FirebaseServiceContext from '../firebase/context';
 import { useActions } from '../state/store';
@@ -65,19 +62,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 
 	return (
 		<>
-			<IonHeader>
-				<IonToolbar>
-					<IonButtons slot="start">
-						<IonBackButton
-							goBack={() => history.push('/')}
-							defaultHref='/'
-							onClick={() => history.push('/')}
-							color='dark'
-						/>
-					</IonButtons>
-					<IonTitle>Login</IonTitle>
-				</IonToolbar>
-			</IonHeader>
+			<AppUnauthentifiedHeader pageTitle="Login" />
 
 			<IonContent
 				forceOverscroll={false}

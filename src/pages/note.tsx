@@ -1,59 +1,187 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useReducer } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/react';
+import uuidv4 from 'uuid/v4';
+import { IonContent } from '@ionic/react';
+import styled from 'styled-components';
+import debounce from 'lodash.debounce';
 
 import Loading from '../components/loading';
 
-import { useStore } from '../state/store';
+import { useStore, useActions } from '../state/store';
 import { useAuthentication } from '../firebase/hooks';
+
+import NoteHeader from '../components/note-header';
+import { Note, NoteType } from '../state/notes';
 
 type RouteParams = {
     noteId: string;
 };
 
-const Note: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
-    useAuthentication();
+const _Note = styled.div`
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 
-    const { noteId } = match.params;
-    const user = useStore(state => state.user.user);
-    const isFetching = useStore(state => state.notes.isFetching);
-    const notes = useStore(state => state.notes.items);
-    const isLoading = !user || isFetching;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 75px 1fr;
+`;
 
-    const note = notes.find(item => item.id === noteId);
+const NoteTitle = styled.input`
+    color: #80868b;
+    letter-spacing: .01785714em;
+    font-size: 1.175rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    border: none;
+    padding: 16px;
+    width: 100%;
+    outline: none;
+`;
 
-    return (
-        <>
-            <IonHeader>
-                <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonBackButton
-                            goBack={() => history.push('/home')}
-                            defaultHref='/home'
-                            onClick={() => history.push('/home')}
-                            color='dark'
-                        />
-                    </IonButtons>
-                    <IonTitle>
-                        Notedown
-					</IonTitle>
-                </IonToolbar>
-            </IonHeader>
+const NoteContent = styled.textarea`
+    color: #80868b;
+    letter-spacing: .01785714em;
+    font-size: 0.975rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    border: none;
+    padding: 0 16px 16px;
+    width: 100%;
+    outline: none;
+`;
 
-            <div>
-                {
-                    isLoading ? (
-                        <Loading />
-                    ) : (
-                            <>
-                                <h5>Edit a note here</h5>
-                                <textarea defaultValue="truc" />
-                            </>
-                        )
-                }
-            </div>
-        </>
-    );
+enum ActionType {
+    updateTitle = 'updateTitle',
+    updateContent = 'updateContent',
+    updateUserId = 'updateUserId',
+};
+type Action<T> = {
+    type: ActionType;
+    payload: T;
 }
 
-export default Note;
+const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
+    useAuthentication();
+
+    const setNote = debounce(useActions(actions => actions.notes.setNote), 1000);
+
+    function reducer(note: Note, action: Action<string>): Note {
+        let updatedNote: Note;
+
+        switch (action.type) {
+            case ActionType.updateTitle:
+                updatedNote = {
+                    ...note,
+                    title: action.payload,
+                };
+                break;
+            case ActionType.updateContent:
+                updatedNote = {
+                    ...note,
+                    content: action.payload,
+                };
+                break;
+            case ActionType.updateUserId:
+                updatedNote = {
+                    ...note,
+                    owner: action.payload,
+                };
+                return updatedNote;
+            default:
+                throw new Error();
+        }
+
+        setNote(updatedNote);
+        return updatedNote;
+    }
+
+    const { noteId } = match.params;
+    const id = noteId === 'new' ?
+        uuidv4() :
+        noteId;
+    const user = useStore(state => state.user.user);
+    const isFetching = useStore(state => state.notes.isFetching);
+
+    const initialState: Note = {
+        id,
+        owner: user ? user.uid : '',
+        type: NoteType.Note,
+        content: '',
+        title: '',
+    };
+    const [note, dispatch] = useReducer(reducer, initialState);
+
+    console.log('note', note);
+
+    useEffect(() => {
+        if (user) {
+            dispatch({ type: ActionType.updateUserId, payload: user.uid })
+        }
+    }, [user]);
+
+    if (!user || isFetching) {
+        return (
+            <Loading />
+        );
+    }
+
+    if (noteId === 'new') {
+        return (
+            <>
+                <NoteHeader />
+
+                <IonContent
+                    forceOverscroll={false}
+                >
+                    <_Note>
+                        <NoteTitle
+                            placeholder="Title"
+                            value={note.title}
+                            onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
+                        />
+                        <NoteContent
+                            placeholder="Take a note..."
+                            value={note.content}
+                            onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
+                        />
+                    </_Note>
+                </IonContent>
+            </>
+        )
+    }
+
+    return (
+        <div>
+            note
+        </div>
+    )
+
+    // const notes = useStore(state => state.notes.items);
+    // const isLoading = !user || isFetching;
+
+    // const note = notes.find(item => item.id === noteId);
+
+    // return (
+    //     <>
+    //         <AppHeader />
+
+    //         <div>
+    //             {
+    //                 isLoading ? (
+    //                     <Loading />
+    //                 ) : (
+    //                         <>
+    //                             <h5>Edit a note here</h5>
+    //                             <textarea defaultValue="truc" />
+    //                         </>
+    //                     )
+    //             }
+    //         </div>
+    //     </>
+    // );
+}
+
+export default NotePage;

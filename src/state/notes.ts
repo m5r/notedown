@@ -1,4 +1,5 @@
 import { Action, Thunk, Select, action, thunk, select } from 'easy-peasy';
+import debounce from 'lodash.debounce';
 
 import firebaseService from '../firebase';
 
@@ -21,6 +22,7 @@ export type NotesModel = {
 
 	fetchNotes: Thunk<NotesModel, string>;
 	setNotes: Action<NotesModel, Note[]>;
+	setNote: Action<NotesModel, Note>;
 	setIsFetching: Action<NotesModel, boolean>;
 }
 
@@ -35,7 +37,7 @@ const notes: NotesModel = {
 		actions.setIsFetching(true);
 
 		const notes = await firebaseService.fetchNotes(userUid);
-		actions.setNotes(notes);
+		actions.setNotes(Array(20).fill(true).map((vide, index) => notes[index % notes.length]));
 
 		actions.setIsFetching(false);
 	}),
@@ -47,6 +49,31 @@ const notes: NotesModel = {
 		...state,
 		isFetching: payload,
 	})),
+	setNote: action((state, payload) => {
+		const currentNoteIndex = state.items.findIndex(item => item.id === payload.id);
+
+		if (currentNoteIndex === -1) {
+			console.log('new note');
+			// new note
+			const newItems = [...state.items, payload];
+			firebaseService.setNote(payload);
+
+			return {
+				...state,
+				items: newItems,
+			};
+		}
+
+		const newItems = state.items.slice();
+		newItems[currentNoteIndex] = payload;
+
+		firebaseService.setNote(payload);
+
+		return {
+			...state,
+			items: newItems,
+		};
+	}),
 };
 
 export default notes;
