@@ -12,6 +12,7 @@ import NoteHeader from '../components/note-header';
 import { useStore, useActions } from '../state/store';
 import { useAuthentication } from '../firebase/hooks';
 import { Text, NoteType } from '../state/notes';
+import { useBackButton } from '../utils';
 
 type RouteParams = {
 	noteId: string;
@@ -70,6 +71,12 @@ type Action = {
 
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
 	useAuthentication();
+
+	function onBackButtonPressed() {
+		history.push('/home');
+	}
+
+	useBackButton(onBackButtonPressed);
 
 	const contentRef = useRef<HTMLTextAreaElement>(null);
 	useEffect(() => {

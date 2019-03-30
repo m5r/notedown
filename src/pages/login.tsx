@@ -15,6 +15,7 @@ import AppUnauthentifiedHeader from '../components/app-unauthentified-header';
 import FirebaseServiceContext from '../firebase/context';
 import { useActions } from '../state/store';
 import { useAuthentication } from '../firebase/hooks';
+import { useBackButton } from '../utils';
 
 const LoginContainer = styled.div`
   background-image: url('/img/landing-background.jpg');
@@ -44,6 +45,12 @@ const LoginContent = styled.div`
 
 const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 	useAuthentication();
+
+	function onBackButtonPressed() {
+		history.push('/');
+	}
+
+	useBackButton(onBackButtonPressed);
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
