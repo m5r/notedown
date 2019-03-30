@@ -18,6 +18,11 @@ import { useActions, useStore } from '../state/store';
 // TODO: toggle switch format masonry/liste
 // TODO: recherche
 
+// TODO: nicer fonts
+// TODO: app icon
+// TODO: app launcher
+// TODO: pages transitions
+
 const _Home = styled.div`
 	display: flex;
     height: 100%;
