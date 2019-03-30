@@ -3,16 +3,29 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonButton, IonIcon } 
 import { RouteComponentProps, withRouter } from 'react-router';
 import { useStore, useActions } from '../state/store';
 
-const NoteHeader: FunctionComponent<RouteComponentProps> = ({ history }) => {
+type RouteParams = {
+    noteId: string;
+};
+
+const NoteHeader: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
     const user = useStore(state => state.user.user);
     const fetchNotes = useActions(actions => actions.notes.fetchNotes);
+    const deleteNote = useActions(actions => actions.notes.deleteNote);
     
-    function handleBackButtonClick() {
+    function goBackToHome() {
         history.push('/home');
 
         if (user) {
             fetchNotes(user.uid);
         }
+    }
+
+    function handleDeleteButtonClick() {
+        if (match.params.noteId !== 'new') {
+            deleteNote(match.params.noteId);
+        }
+
+        history.push('/home');
     }
     
     return (
@@ -21,13 +34,13 @@ const NoteHeader: FunctionComponent<RouteComponentProps> = ({ history }) => {
                 <IonButtons slot="start">
                     <IonButton
                         class="header-back-button"
-                        onClick={handleBackButtonClick}
+                        onClick={goBackToHome}
                     >
                         <IonIcon icon="arrow-back" color="dark" mode="md" />
                     </IonButton>
                 </IonButtons>
                 <IonButtons slot="end">
-                    <IonButton onClick={() => history.push('/home')}>
+                    <IonButton onClick={handleDeleteButtonClick}>
                         <IonIcon icon="trash" color="dark" mode="md" />
                     </IonButton>
                 </IonButtons>

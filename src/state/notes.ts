@@ -29,7 +29,7 @@ export type NotesModel = {
 	setNotes: Action<NotesModel, Note[]>;
 	setIsFetching: Action<NotesModel, boolean>;
 	setNote: Action<NotesModel, Note>;
-	deleteNote: Action<NotesModel, Note>;
+	deleteNote: Action<NotesModel, string>;
 }
 
 const notes: NotesModel = {
@@ -85,10 +85,10 @@ const notes: NotesModel = {
 			items: nextItems,
 		};
 	}),
-	deleteNote: action((state, payload) => {
-		const nextItems = state.items.filter(item => item.id !== payload.id);
+	deleteNote: action((state, noteId) => {
+		const nextItems = state.items.filter(item => item.id !== noteId);
 
-		firebaseService.deleteNote(payload);
+		firebaseService.deleteNote(noteId);
 
 		return {
 			...state,

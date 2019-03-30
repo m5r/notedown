@@ -65,7 +65,7 @@ type Action<T> = {
     payload: T;
 }
 
-const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
+const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ match }) => {
     useAuthentication();
 
     const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -177,9 +177,15 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
     }
 
     return (
-        <div>
-            note
-        </div>
+        <>
+            <NoteHeader />
+
+            <IonContent
+                forceOverscroll={false}
+            >
+                note
+            </IonContent>
+        </>
     )
 
     // const notes = useStore(state => state.notes.items);

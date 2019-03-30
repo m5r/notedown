@@ -67,9 +67,9 @@ export class FirebaseService {
 		return query.set(note);
 	}
 
-	async deleteNote(note: Note) {
+	async deleteNote(noteId: string) {
 		const collection = this.db.collection('notes');
-		const query = collection.doc(note.id);
+		const query = collection.doc(noteId);
 
 		return query.delete();
 	}
