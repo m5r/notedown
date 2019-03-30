@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react';
+import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
+import { IonIcon } from '@ionic/react';
 
 import { Note, NoteType } from '../state/notes';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 type Props = {
 	note: Note;
@@ -31,6 +32,27 @@ const Card = styled.div`
 	word-break: break-word;
 `;
 
+const List = styled.ul`
+	font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+	padding: 0;
+    list-style: none;
+`;
+
+const ListItem = styled.li<{ isDone: boolean }>`
+    display: flex;
+	align-items: center;
+
+	${({ isDone }) => isDone && css`
+		text-decoration: line-through;
+	`}
+`;
+
+const ListItemContent = styled.span`
+	margin-left: 8px;
+`;
+
 const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 	if (note.type === NoteType.Text) {
 		return (
@@ -54,11 +76,17 @@ const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 					<Title>
 						{note.title}
 					</Title>
-					<Content>
+					<List>
 						{note.items.map(item => (
-							<div style={{ textDecoration: item.isDone ? 'line-through' : 'none' }}>{item.content}</div>
+							<ListItem isDone={item.isDone}>
+								<IonIcon
+									name={item.isDone ? 'checkbox-outline' : 'square-outline'}
+									mode="md"
+								/>
+								<ListItemContent>{item.content}</ListItemContent>
+							</ListItem>
 						))}
-					</Content>
+					</List>
 				</Card>
 			</Link>
 		);
