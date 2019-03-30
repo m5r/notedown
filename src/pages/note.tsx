@@ -58,11 +58,15 @@ enum ActionType {
     updateTitle = 'updateTitle',
     updateContent = 'updateContent',
     updateUserId = 'updateUserId',
+    overrideNote = 'overrideNote',
 };
 
-type Action<T> = {
-    type: ActionType;
-    payload: T;
+type Action = {
+    type: ActionType.updateContent | ActionType.updateTitle | ActionType.updateUserId;
+    payload: string;
+} | {
+    type: ActionType.overrideNote,
+    payload: Note,
 }
 
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
@@ -82,7 +86,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
     }
     const debouncedSetNote = setNoteRef.current;
 
-    function reducer(note: Note, action: Action<string>): Note {
+    function reducer(note: Note, action: Action): Note {
         let updatedNote: Note;
 
         switch (action.type) {
@@ -104,6 +108,8 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
                     owner: action.payload,
                 };
                 return updatedNote;
+            case ActionType.overrideNote:
+                return action.payload;
             default:
                 throw new Error();
         }
@@ -122,34 +128,41 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
     // peut servir quand le user ouvre l'app directement à cette page
     const isFetching = useStore(state => state.notes.isFetching);
 
-    console.log('user', user);
-    console.log('isFetching', isFetching);
+    const noteFromState = notes.find(n => n.id === noteId);
+    const initialState: Note = noteId === 'new' ?
+        {
+            id,
+            owner: user ? user.uid : '',
+            type: NoteType.Note,
+            content: '',
+            title: '',
 
-    if (!user || isFetching) {
+            createdAt: Firebase.firestore.FieldValue.serverTimestamp(),
+            lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
+        } :
+        noteFromState!;
+
+    const [note, dispatch] = useReducer(reducer, initialState);
+
+    useEffect(() => {
+        if (noteId === 'new' && user) {
+            dispatch({ type: ActionType.updateUserId, payload: user.uid })
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (noteId !== 'new' && !!noteFromState) {
+            dispatch({ type: ActionType.overrideNote, payload: noteFromState })
+        }
+    }, [noteFromState]);
+
+    if (!user || isFetching || !note) {
         return (
             <Loading />
         );
     }
 
     if (noteId === 'new') {
-        const initialState: Note = {
-            id,
-            owner: user ? user.uid : '',
-            type: NoteType.Note,
-            content: '',
-            title: '',
-    
-            createdAt: Firebase.firestore.FieldValue.serverTimestamp(),
-            lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
-        };
-        const [note, dispatch] = useReducer(reducer, initialState);
-    
-        useEffect(() => {
-            if (user) {
-                dispatch({ type: ActionType.updateUserId, payload: user.uid })
-            }
-        }, [user]);
-
         return (
             <>
                 <NoteHeader />
@@ -175,15 +188,10 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
         )
     }
 
-    const noteFromState = notes.find(n => n.id === noteId);
-
     if (!noteFromState) {
         history.replace('/home');
         return null;
     }
-
-    const initialState: Note = noteFromState;
-    const [note, dispatch] = useReducer(reducer, initialState);
 
     return (
         <>
@@ -193,45 +201,21 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
                 forceOverscroll={false}
             >
                 <_Note>
-                        <NoteTitle
-                            placeholder="Title"
-                            value={note.title}
-                            onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
-                        />
-                        <NoteContent
-                            ref={contentRef}
-                            placeholder="Take a note..."
-                            value={note.content}
-                            onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
-                        />
-                    </_Note>
+                    <NoteTitle
+                        placeholder="Title"
+                        value={note.title}
+                        onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
+                    />
+                    <NoteContent
+                        ref={contentRef}
+                        placeholder="Take a note..."
+                        value={note.content}
+                        onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
+                    />
+                </_Note>
             </IonContent>
         </>
     )
-
-    // const notes = useStore(state => state.notes.items);
-    // const isLoading = !user || isFetching;
-
-    // const note = notes.find(item => item.id === noteId);
-
-    // return (
-    //     <>
-    //         <AppHeader />
-
-    //         <div>
-    //             {
-    //                 isLoading ? (
-    //                     <Loading />
-    //                 ) : (
-    //                         <>
-    //                             <h5>Edit a note here</h5>
-    //                             <textarea defaultValue="truc" />
-    //                         </>
-    //                     )
-    //             }
-    //         </div>
-    //     </>
-    // );
 }
 
 export default NotePage;

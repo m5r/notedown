@@ -43,7 +43,6 @@ const notes: NotesModel = {
 		actions.setIsFetching(true);
 
 		const notes = await firebaseService.fetchNotes(userUid);
-		console.log('notes', notes);
 		actions.setNotes(notes);
 
 		actions.setIsFetching(false);
