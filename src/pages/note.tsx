@@ -65,7 +65,7 @@ type Action<T> = {
     payload: T;
 }
 
-const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ match }) => {
+const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
     useAuthentication();
 
     const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -116,6 +116,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ match }
     const id = noteId === 'new' ?
         uuidv4() :
         noteId;
+    const notes = useStore(state => state.notes.items);
     const user = useStore(state => state.user.user);
 
     // peut servir quand le user ouvre l'app directement à cette page
@@ -124,26 +125,6 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ match }
     console.log('user', user);
     console.log('isFetching', isFetching);
 
-    const initialState: Note = {
-        id,
-        owner: user ? user.uid : '',
-        type: NoteType.Note,
-        content: '',
-        title: '',
-
-        createdAt: Firebase.firestore.FieldValue.serverTimestamp(),
-        lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
-    };
-    const [note, dispatch] = useReducer(reducer, initialState);
-
-    console.log('note', note);
-
-    useEffect(() => {
-        if (user) {
-            dispatch({ type: ActionType.updateUserId, payload: user.uid })
-        }
-    }, [user]);
-
     if (!user || isFetching) {
         return (
             <Loading />
@@ -151,6 +132,24 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ match }
     }
 
     if (noteId === 'new') {
+        const initialState: Note = {
+            id,
+            owner: user ? user.uid : '',
+            type: NoteType.Note,
+            content: '',
+            title: '',
+    
+            createdAt: Firebase.firestore.FieldValue.serverTimestamp(),
+            lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        const [note, dispatch] = useReducer(reducer, initialState);
+    
+        useEffect(() => {
+            if (user) {
+                dispatch({ type: ActionType.updateUserId, payload: user.uid })
+            }
+        }, [user]);
+
         return (
             <>
                 <NoteHeader />
@@ -176,6 +175,16 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ match }
         )
     }
 
+    const noteFromState = notes.find(n => n.id === noteId);
+
+    if (!noteFromState) {
+        history.replace('/home');
+        return null;
+    }
+
+    const initialState: Note = noteFromState;
+    const [note, dispatch] = useReducer(reducer, initialState);
+
     return (
         <>
             <NoteHeader />
@@ -183,7 +192,19 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ match }
             <IonContent
                 forceOverscroll={false}
             >
-                note
+                <_Note>
+                        <NoteTitle
+                            placeholder="Title"
+                            value={note.title}
+                            onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
+                        />
+                        <NoteContent
+                            ref={contentRef}
+                            placeholder="Take a note..."
+                            value={note.content}
+                            onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
+                        />
+                    </_Note>
             </IonContent>
         </>
     )
