@@ -26,16 +26,16 @@ const Label = styled.div`
 `;
 
 const HomeFooter: FunctionComponent = () => (
-    <_HomeFooter>
-        <Link to="/note/new">
-            <Label>
-                Take a note...
-            </Label>
-        </Link>
-        <div>
-            <IonIcon size="large" name="checkbox-outline" />
-        </div>
-    </_HomeFooter>
+	<_HomeFooter>
+		<Link to="/note/new">
+			<Label>
+				Take a note...
+			</Label>
+		</Link>
+		<div>
+			<IonIcon size="large" name="checkbox-outline" />
+		</div>
+	</_HomeFooter>
 );
 
 export default HomeFooter;

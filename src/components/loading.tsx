@@ -6,9 +6,9 @@ const _Loading = styled.div`
 `;
 
 const Loading: FunctionComponent = () => (
-    <_Loading>
-        Loading...
-    </_Loading>
+	<_Loading>
+		Loading...
+	</_Loading>
 );
 
 export default Loading;

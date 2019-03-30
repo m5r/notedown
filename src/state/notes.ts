@@ -61,7 +61,7 @@ const notes: NotesModel = {
 		const note = {
 			...payload,
 			lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
-		}
+		};
 
 		if (currentNoteIndex === -1) {
 			// new note

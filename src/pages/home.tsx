@@ -8,7 +8,7 @@ import HomeFooter from '../components/home-footer';
 import { useAuthentication } from '../firebase/hooks';
 import { useStore } from '../state/store';
 
-// HALF-DONE: liste des notes sous forme de masonry
+// DONE: liste des notes sous forme de masonry
 // DONE: footer avec "Take a note..."
 // DONE: créer une note
 // DONE: modifier une note

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext, useState } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import {
 	IonButton,
 	IonContent,
@@ -29,7 +29,7 @@ const Signup: FunctionComponent<RouteComponentProps> = ({ history }) => {
 		try {
 			const userCredential = await firebase.createUser(email, password);
 			setUser(userCredential.user);
-			history.replace('/home')
+			history.replace('/home');
 		} catch (e) {
 			alert(e.message);
 		}

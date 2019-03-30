@@ -10,7 +10,7 @@ type StoreModel = {
 
 const model: StoreModel = {
 	notes,
-	user
+	user,
 };
 
 const { useActions, useStore, useDispatch } = createTypedHooks<StoreModel>();

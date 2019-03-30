@@ -67,6 +67,6 @@ const Landing: FunctionComponent = () => {
 			</StartingPageContainer>
 		</IonContent>
 	);
-}
+};
 
 export default Landing;

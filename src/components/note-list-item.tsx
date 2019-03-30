@@ -5,14 +5,13 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 type Props = {
-    note: Note;
+	note: Note;
 }
 
 const Title = styled.div`
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.5rem;
-    word-break: break-word;
 `;
 
 const Content = styled.p`
@@ -29,21 +28,22 @@ const Card = styled.div`
     position: relative;
     border-radius: 8px;
     box-sizing: border-box;
+	word-break: break-word;
 `;
 
 const NoteListItem: FunctionComponent<Props> = ({ note }) => {
-    return (
-        <Link to={`/note/${note.id}`}>
-            <Card>
-                <Title>
-                    {note.title}
-                </Title>
-                <Content>
-                    {note.content}
-                </Content>
-            </Card>
-        </Link>
-    );
-}
+	return (
+		<Link to={`/note/${note.id}`}>
+			<Card>
+				<Title>
+					{note.title}
+				</Title>
+				<Content>
+					{note.content}
+				</Content>
+			</Card>
+		</Link>
+	);
+};
 
 export default NoteListItem;
