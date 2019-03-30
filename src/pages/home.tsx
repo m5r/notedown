@@ -19,6 +19,7 @@ import { useStore } from '../state/store';
 // TODO: recherche
 
 // TODO: nicer fonts
+// TODO: login/signup feedback (loading animation)
 // TODO: app icon
 // TODO: app launcher
 // TODO: pages transitions
