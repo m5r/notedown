@@ -5,21 +5,38 @@ import firebaseService from '../firebase';
 
 export enum NoteType {
 	List = 'list',
-	Note = 'note',
+	Text = 'text',
 }
 
 type FirebaseTimestamp = Firebase.firestore.FieldValue;
 
-export type Note = {
+type BaseNote = {
 	id: string;
 	owner: string;
 	type: NoteType;
 	title: string;
-	content: string;
 
 	lastModifiedAt: FirebaseTimestamp;
 	createdAt: FirebaseTimestamp;
+}
+
+export type Text = BaseNote & {
+	type: NoteType.Text;
+	content: string;
 };
+
+export type ListItem = {
+	id: string;
+	content: string;
+	isDone: boolean;
+}
+
+export type List = BaseNote & {
+	type: NoteType.List;
+	items: ListItem[];
+}
+
+export type Note = Text | List;
 
 export type NotesModel = {
 	items: Note[];

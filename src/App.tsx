@@ -32,6 +32,7 @@ const App: FunctionComponent = () => (
 									<Route path="/logout" component={Logout} exact />
 									<Route path="/home" component={Home} exact />
 									<Route path="/note/:noteId" component={NotePage} exact />
+									<Route path="/list/:listId" component={NotePage} exact />
 									<Route path="*" render={() => <Redirect to="/" />} />
 								</Switch>
 							</IonPage>

@@ -11,10 +11,10 @@ import NoteHeader from '../components/note-header';
 
 import { useStore, useActions } from '../state/store';
 import { useAuthentication } from '../firebase/hooks';
-import { Text, NoteType } from '../state/notes';
+import { List, ListItem, NoteType } from '../state/notes';
 
 type RouteParams = {
-	noteId: string;
+	listId: string;
 };
 
 const _Note = styled.div`
@@ -55,17 +55,22 @@ const NoteContent = styled.textarea`
 
 enum ActionType {
 	updateTitle = 'updateTitle',
-	updateContent = 'updateContent',
+	addItem = 'addItem',
+	removeItem = 'removeItem',
+	toggleItem = 'toggleItem',
 	updateUserId = 'updateUserId',
 	overrideNote = 'overrideNote',
 }
 
 type Action = {
-	type: ActionType.updateContent | ActionType.updateTitle | ActionType.updateUserId;
+	type: ActionType.updateTitle | ActionType.updateUserId;
 	payload: string;
 } | {
 	type: ActionType.overrideNote,
-	payload: Text,
+	payload: List,
+} | {
+	type: ActionType.addItem | ActionType.removeItem | ActionType.toggleItem;
+	payload: ListItem;
 }
 
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
@@ -85,8 +90,8 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	}
 	const debouncedSetNote = setNoteRef.current;
 
-	function reducer(note: Text, action: Action): Text {
-		let updatedNote: Text;
+	function reducer(note: List, action: Action): List {
+		let updatedNote: List;
 
 		switch (action.type) {
 			case ActionType.updateTitle:
@@ -95,10 +100,23 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 					title: action.payload,
 				};
 				break;
-			case ActionType.updateContent:
+			case ActionType.addItem:
 				updatedNote = {
 					...note,
-					content: action.payload,
+					items: [...note.items, action.payload],
+				};
+				break;
+			case ActionType.removeItem:
+				updatedNote = {
+					...note,
+					items: note.items.filter(item => item.id === action.payload.id),
+				};
+				break;
+			case ActionType.toggleItem:
+				const updatedItems = note.items;
+				updatedNote = {
+					...note,
+					items: updatedItems,
 				};
 				break;
 			case ActionType.updateUserId:
@@ -117,23 +135,23 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		return updatedNote;
 	}
 
-	const { noteId } = match.params;
-	const id = noteId === 'new' ?
+	const { listId } = match.params;
+	const id = listId === 'new' ?
 		uuidv4() :
-		noteId;
+		listId;
 	const notes = useStore(state => state.notes.items);
 	const user = useStore(state => state.user.user);
 
 	// peut servir quand le user ouvre l'app directement à cette page
 	const isFetching = useStore(state => state.notes.isFetching);
 
-	const noteFromState = notes.find(n => n.id === noteId) as Text;
-	const initialState: Text = noteId === 'new' ?
+	const noteFromState = notes.find(n => n.id === listId) as List;
+	const initialState: List = listId === 'new' ?
 		{
 			id,
 			owner: user ? user.uid : '',
-			type: NoteType.Text,
-			content: '',
+			type: NoteType.List,
+			items: [],
 			title: '',
 
 			createdAt: Firebase.firestore.FieldValue.serverTimestamp(),
@@ -144,13 +162,13 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	const [note, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
-		if (noteId === 'new' && user) {
+		if (listId === 'new' && user) {
 			dispatch({ type: ActionType.updateUserId, payload: user.uid });
 		}
 	}, [user]);
 
 	useEffect(() => {
-		if (noteId !== 'new' && !!noteFromState) {
+		if (listId !== 'new' && !!noteFromState) {
 			dispatch({ type: ActionType.overrideNote, payload: noteFromState });
 		}
 	}, [noteFromState]);
@@ -161,7 +179,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		);
 	}
 
-	if (noteId === 'new') {
+	if (listId === 'new') {
 		return (
 			<>
 				<NoteHeader />
@@ -178,8 +196,8 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 						<NoteContent
 							ref={contentRef}
 							placeholder="Take a note..."
-							value={note.content}
-							onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
+							// value={note.content}
+							// onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
 						/>
 					</_Note>
 				</IonContent>
@@ -208,8 +226,8 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 					<NoteContent
 						ref={contentRef}
 						placeholder="Take a note..."
-						value={note.content}
-						onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
+						// value={note.content}
+						// onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
 					/>
 				</_Note>
 			</IonContent>
