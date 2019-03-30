@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useReducer } from 'react';
+import React, { FunctionComponent, useEffect, useReducer, useRef } from 'react';
 import { RouteComponentProps } from 'react-router';
 import uuidv4 from 'uuid/v4';
 import { IonContent } from '@ionic/react';
@@ -58,6 +58,7 @@ enum ActionType {
     updateContent = 'updateContent',
     updateUserId = 'updateUserId',
 };
+
 type Action<T> = {
     type: ActionType;
     payload: T;
@@ -66,7 +67,19 @@ type Action<T> = {
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
     useAuthentication();
 
-    const setNote = debounce(useActions(actions => actions.notes.setNote), 1000);
+    const contentRef = useRef<HTMLTextAreaElement>(null);
+    useEffect(() => {
+        if (contentRef.current) {
+            contentRef.current.focus();
+        }
+    }, [contentRef.current]);
+
+    const setNote = useActions(actions => actions.notes.setNote);
+    const setNoteRef = useRef<typeof setNote | null>(null);
+    if (!setNoteRef.current) {
+        setNoteRef.current = debounce(setNote, 1000);
+    }
+    const debouncedSetNote = setNoteRef.current;
 
     function reducer(note: Note, action: Action<string>): Note {
         let updatedNote: Note;
@@ -94,7 +107,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
                 throw new Error();
         }
 
-        setNote(updatedNote);
+        debouncedSetNote(updatedNote);
         return updatedNote;
     }
 
@@ -143,6 +156,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
                             onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
                         />
                         <NoteContent
+                            ref={contentRef}
                             placeholder="Take a note..."
                             value={note.content}
                             onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}

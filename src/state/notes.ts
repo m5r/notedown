@@ -1,5 +1,4 @@
 import { Action, Thunk, Select, action, thunk, select } from 'easy-peasy';
-import debounce from 'lodash.debounce';
 
 import firebaseService from '../firebase';
 
@@ -53,25 +52,24 @@ const notes: NotesModel = {
 		const currentNoteIndex = state.items.findIndex(item => item.id === payload.id);
 
 		if (currentNoteIndex === -1) {
-			console.log('new note');
 			// new note
-			const newItems = [...state.items, payload];
+			const nextItems = [...state.items, payload];
 			firebaseService.setNote(payload);
 
 			return {
 				...state,
-				items: newItems,
+				items: nextItems,
 			};
 		}
 
-		const newItems = state.items.slice();
-		newItems[currentNoteIndex] = payload;
+		const nextItems = [...state.items];
+		nextItems[currentNoteIndex] = payload;
 
 		firebaseService.setNote(payload);
 
 		return {
 			...state,
-			items: newItems,
+			items: nextItems,
 		};
 	}),
 };
