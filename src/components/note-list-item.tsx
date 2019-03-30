@@ -83,7 +83,7 @@ const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 					</Title>
 					<List>
 						{itemsToDisplay.map(item => (
-							<ListItem>
+							<ListItem key={item.id}>
 								<IonIcon name="square-outline" mode="md" />
 								<ListItemContent>{item.content}</ListItemContent>
 							</ListItem>
