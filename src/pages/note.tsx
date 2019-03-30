@@ -82,7 +82,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
     const setNote = useActions(actions => actions.notes.setNote);
     const setNoteRef = useRef<typeof setNote | null>(null);
     if (!setNoteRef.current) {
-        setNoteRef.current = debounce(setNote, 350);
+        setNoteRef.current = debounce(setNote, 350, { trailing: true, leading: true });
     }
     const debouncedSetNote = setNoteRef.current;
 
