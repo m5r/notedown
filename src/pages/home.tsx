@@ -14,9 +14,12 @@ import { useStore } from '../state/store';
 // DONE: modifier une note
 // HALF-DONE: swipe left/right les notes pour les supprimer
 // DONE: footer avec "☑"
+// DONE: liste des listes
 // TODO: créer une liste
+// TODO: modifier une liste
 // TODO: toggle switch format masonry/liste
 // TODO: recherche
+// TODO: notification rappel (date précise ou "dans 1 jour"?)
 
 // TODO: nicer fonts
 // TODO: login/signup feedback (loading animation)
