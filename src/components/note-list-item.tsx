@@ -22,7 +22,7 @@ const Content = styled.p`
 `;
 
 const Card = styled.div`
-    min-height: 120px;
+    min-height: 110px;
     padding: 12px 16px;
     border: 1px solid #e0e0e0;
     overflow: hidden;
@@ -36,21 +36,22 @@ const List = styled.ul`
 	font-size: 1.125rem;
     font-weight: 400;
     line-height: 1.5rem;
-	padding: 0;
     list-style: none;
+	padding: 0;
+	margin-bottom: 0;
 `;
 
-const ListItem = styled.li<{ isDone: boolean }>`
+const ListItem = styled.li`
     display: flex;
 	align-items: center;
-
-	${({ isDone }) => isDone && css`
-		text-decoration: line-through;
-	`}
 `;
 
 const ListItemContent = styled.span`
 	margin-left: 8px;
+`;
+
+const BottomCardMessage = styled.div`
+	padding-top: 8px;
 `;
 
 const NoteListItem: FunctionComponent<Props> = ({ note }) => {
@@ -70,6 +71,10 @@ const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 	}
 
 	if (note.type === NoteType.List) {
+		const itemsToDisplay = note.items.filter(item => !item.isDone);
+		const hiddenItemsCount = note.items.length - itemsToDisplay.length;
+		const bottomCardMessage = `+${hiddenItemsCount} checked item${hiddenItemsCount > 1 ? 's' : ''}`;
+
 		return (
 			<Link to={`/list/${note.id}`}>
 				<Card>
@@ -77,15 +82,17 @@ const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 						{note.title}
 					</Title>
 					<List>
-						{note.items.map(item => (
-							<ListItem isDone={item.isDone}>
-								<IonIcon
-									name={item.isDone ? 'checkbox-outline' : 'square-outline'}
-									mode="md"
-								/>
+						{itemsToDisplay.map(item => (
+							<ListItem>
+								<IonIcon name="square-outline" mode="md" />
 								<ListItemContent>{item.content}</ListItemContent>
 							</ListItem>
 						))}
+						{hiddenItemsCount > 0 && (
+							<BottomCardMessage>
+								{bottomCardMessage}
+							</BottomCardMessage>
+						)}
 					</List>
 				</Card>
 			</Link>
