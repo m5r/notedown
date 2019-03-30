@@ -1,4 +1,5 @@
 import { Action, Thunk, Select, action, thunk, select } from 'easy-peasy';
+import Firebase from 'firebase/app';
 
 import firebaseService from '../firebase';
 
@@ -7,12 +8,17 @@ export enum NoteType {
 	Note = 'note',
 }
 
+type FirebaseTimestamp = Firebase.firestore.FieldValue;
+
 export type Note = {
 	id: string;
 	owner: string;
 	type: NoteType;
 	title: string;
 	content: string;
+
+	lastModifiedAt: FirebaseTimestamp;
+	createdAt: FirebaseTimestamp;
 };
 
 export type NotesModel = {
@@ -21,8 +27,9 @@ export type NotesModel = {
 
 	fetchNotes: Thunk<NotesModel, string>;
 	setNotes: Action<NotesModel, Note[]>;
-	setNote: Action<NotesModel, Note>;
 	setIsFetching: Action<NotesModel, boolean>;
+	setNote: Action<NotesModel, Note>;
+	deleteNote: Action<NotesModel, Note>;
 }
 
 const notes: NotesModel = {
@@ -36,7 +43,8 @@ const notes: NotesModel = {
 		actions.setIsFetching(true);
 
 		const notes = await firebaseService.fetchNotes(userUid);
-		actions.setNotes(Array(20).fill(true).map((vide, index) => notes[index % notes.length]));
+		console.log('notes', notes);
+		actions.setNotes(notes);
 
 		actions.setIsFetching(false);
 	}),
@@ -51,10 +59,15 @@ const notes: NotesModel = {
 	setNote: action((state, payload) => {
 		const currentNoteIndex = state.items.findIndex(item => item.id === payload.id);
 
+		const note = {
+			...payload,
+			lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
+		}
+
 		if (currentNoteIndex === -1) {
 			// new note
-			const nextItems = [...state.items, payload];
-			firebaseService.setNote(payload);
+			const nextItems = [...state.items, note];
+			firebaseService.setNote(note);
 
 			return {
 				...state,
@@ -63,9 +76,19 @@ const notes: NotesModel = {
 		}
 
 		const nextItems = [...state.items];
-		nextItems[currentNoteIndex] = payload;
+		nextItems[currentNoteIndex] = note;
 
-		firebaseService.setNote(payload);
+		firebaseService.setNote(note);
+
+		return {
+			...state,
+			items: nextItems,
+		};
+	}),
+	deleteNote: action((state, payload) => {
+		const nextItems = state.items.filter(item => item.id !== payload.id);
+
+		firebaseService.deleteNote(payload);
 
 		return {
 			...state,

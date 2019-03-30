@@ -44,7 +44,7 @@ export class FirebaseService {
 	/* db methods */
 	async fetchNotes(userUid: string): Promise<Note[]> {
 		const collection = this.db.collection('notes');
-		const query = collection.where('owner', '==', userUid);
+		const query = collection.orderBy('lastModifiedAt', 'desc').where('owner', '==', userUid);
 		const querySnapshot = await query.get();
 		const notes = querySnapshot.docs.map((document) => {
 			const data = document.data();
@@ -61,11 +61,17 @@ export class FirebaseService {
 	}
 
 	async setNote(note: Note) {
-		console.log('fbase set note');
 		const collection = this.db.collection('notes');
 		const query = collection.doc(note.id);
 
 		return query.set(note);
+	}
+
+	async deleteNote(note: Note) {
+		const collection = this.db.collection('notes');
+		const query = collection.doc(note.id);
+
+		return query.delete();
 	}
 }
 

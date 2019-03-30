@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/react';
 import styled from 'styled-components';
 
@@ -6,7 +6,7 @@ import NotesList from '../components/notes-list';
 import HomeFooter from '../components/home-footer';
 
 import { useAuthentication } from '../firebase/hooks';
-import { useActions, useStore } from '../state/store';
+import { useStore } from '../state/store';
 
 // HALF-DONE: liste des notes sous forme de masonry
 // DONE: footer avec "Take a note..."
@@ -33,15 +33,6 @@ const Home: FunctionComponent = () => {
 	useAuthentication();
 
 	const user = useStore(state => state.user.user);
-	const fetchNotes = useActions(actions => actions.notes.fetchNotes);
-
-	useEffect(() => {
-		if (!user) {
-			return;
-		}
-
-		fetchNotes(user.uid);
-	}, [user]);
 
 	return (
 		<>

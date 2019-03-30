@@ -4,6 +4,7 @@ import uuidv4 from 'uuid/v4';
 import { IonContent } from '@ionic/react';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
+import Firebase from 'firebase/app';
 
 import Loading from '../components/loading';
 
@@ -77,7 +78,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
     const setNote = useActions(actions => actions.notes.setNote);
     const setNoteRef = useRef<typeof setNote | null>(null);
     if (!setNoteRef.current) {
-        setNoteRef.current = debounce(setNote, 1000);
+        setNoteRef.current = debounce(setNote, 350);
     }
     const debouncedSetNote = setNoteRef.current;
 
@@ -116,7 +117,12 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
         uuidv4() :
         noteId;
     const user = useStore(state => state.user.user);
+
+    // peut servir quand le user ouvre l'app directement à cette page
     const isFetching = useStore(state => state.notes.isFetching);
+
+    console.log('user', user);
+    console.log('isFetching', isFetching);
 
     const initialState: Note = {
         id,
@@ -124,6 +130,9 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
         type: NoteType.Note,
         content: '',
         title: '',
+
+        createdAt: Firebase.firestore.FieldValue.serverTimestamp(),
+        lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
     };
     const [note, dispatch] = useReducer(reducer, initialState);
 

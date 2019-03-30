@@ -1,5 +1,5 @@
 import { Action, action } from 'easy-peasy';
-import Firebase from 'firebase';
+import Firebase from 'firebase/app';
 
 export type UserModel = {
 	user: Firebase.User | null;
