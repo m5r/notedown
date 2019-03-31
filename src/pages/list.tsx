@@ -87,6 +87,10 @@ const ListItemContent = styled.textarea`
 	outline: none;
 `;
 
+const PaddedList = styled(S.List)`
+	padding: 0 16px 16px;
+`;
+
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
 	useAuthentication();
 
@@ -219,14 +223,14 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 							value={list.title}
 							onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
 						/>
-						<S.List>
+						<PaddedList>
 							{itemsToDisplay.map(item => (
 								<_ListItem key={item.id}>
 									<IonIcon name="square-outline" mode="md" />
 									<S.ListItemContent>{item.content}</S.ListItemContent>
 								</_ListItem>
 							))}
-						</S.List>
+						</PaddedList>
 						{/*<NoteContent
 							// ref={contentRef}
 							placeholder="Take a list..."
@@ -272,12 +276,20 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 						value={list.title}
 						onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
 					/>
-					<S.List>
+					<PaddedList>
 						{todo.map(item => (
 							<ListItemComponent
 								key={item.id}
 								item={item}
-								onChange={value => {
+								onCheckboxClick={() => {
+									const nextItem: ListItem = {
+										...item,
+										isDone: !item.isDone,
+									};
+
+									dispatch({ type: ActionType.updateItem, payload: nextItem });
+								}}
+								onContentChange={value => {
 									const nextItem: ListItem = {
 										...item,
 										content: value,
@@ -292,7 +304,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 							<IonIcon name="add" mode="md" />
 							<S.ListItemContent>List item</S.ListItemContent>
 						</_AddListItem>
-					</S.List>
+					</PaddedList>
 				</_List>
 			</IonContent>
 		</>

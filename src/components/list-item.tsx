@@ -9,7 +9,8 @@ import { ListItem } from '../state/notes';
 
 type Props = {
 	item: ListItem;
-	onChange: (nextValue: string) => void;
+	onCheckboxClick: () => void;
+	onContentChange: (nextValue: string) => void;
 };
 
 const _ListItem = styled.li`
@@ -23,7 +24,7 @@ const ListItemContent = styled.textarea`
 	width: 100%;
 `;
 
-const ListItemComponent: FunctionComponent<Props> = ({ item, onChange }) => {
+const ListItemComponent: FunctionComponent<Props> = ({ item, onCheckboxClick, onContentChange }) => {
 	const contentRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
@@ -34,11 +35,15 @@ const ListItemComponent: FunctionComponent<Props> = ({ item, onChange }) => {
 
 	return (
 		<_ListItem>
-			<IonIcon name={item.isDone ? 'checkbox-outline' : 'square-outline'} mode="md" />
+			<IonIcon
+				onClick={onCheckboxClick}
+				name={item.isDone ? 'checkbox-outline' : 'square-outline'}
+				mode="md"
+			/>
 			<S.ListItemContent>
 				<ListItemContent
 					ref={contentRef}
-					onChange={e => onChange(e.target.value)}
+					onChange={e => onContentChange(e.target.value)}
 					value={item.content}
 				/>
 			</S.ListItemContent>

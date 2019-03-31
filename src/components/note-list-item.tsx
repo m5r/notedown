@@ -38,6 +38,14 @@ const BottomCardMessage = styled.div`
 	padding-top: 8px;
 `;
 
+const TruncatedListItemContent = styled(S.ListItemContent)`
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+`;
+
 const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 	if (note.type === NoteType.Text) {
 		return (
@@ -69,7 +77,7 @@ const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 						{itemsToDisplay.map(item => (
 							<S.ListItem key={item.id}>
 								<IonIcon name="square-outline" mode="md" />
-								<S.ListItemContent>{item.content}</S.ListItemContent>
+								<TruncatedListItemContent>{item.content}</TruncatedListItemContent>
 							</S.ListItem>
 						))}
 						{hiddenItemsCount > 0 && (

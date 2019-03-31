@@ -35,7 +35,6 @@ const List = styled.ul`
 	margin-bottom: 0;
 	
 	color: #202124;
-    padding: 0 16px 16px;
     outline: none;
 `;
 
