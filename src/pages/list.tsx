@@ -76,12 +76,12 @@ type Action = {
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
 	useAuthentication();
 
-	const contentRef = useRef<HTMLTextAreaElement>(null);
-	useEffect(() => {
-		if (contentRef.current) {
-			contentRef.current.focus();
-		}
-	}, [contentRef.current]);
+	// const contentRef = useRef<HTMLTextAreaElement>(null);
+	// useEffect(() => {
+	// 	if (contentRef.current) {
+	// 		contentRef.current.focus();
+	// 	}
+	// }, [contentRef.current]);
 
 	const setNote = useActions(actions => actions.notes.setNote);
 	const setNoteRef = useRef<typeof setNote | null>(null);
@@ -168,7 +168,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	}, [user]);
 
 	useEffect(() => {
-		if (listId !== 'new' && !!noteFromState) {
+		if (listId !== 'new' && Boolean(noteFromState)) {
 			dispatch({ type: ActionType.overrideNote, payload: noteFromState });
 		}
 	}, [noteFromState]);
@@ -194,7 +194,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 							onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
 						/>
 						<NoteContent
-							ref={contentRef}
+							// ref={contentRef}
 							placeholder="Take a note..."
 							// value={note.content}
 							// onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
@@ -224,7 +224,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 						onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
 					/>
 					<NoteContent
-						ref={contentRef}
+						// ref={contentRef}
 						placeholder="Take a note..."
 						// value={note.content}
 						// onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}

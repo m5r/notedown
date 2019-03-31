@@ -157,7 +157,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	}, [user]);
 
 	useEffect(() => {
-		if (noteId !== 'new' && !!noteFromState) {
+		if (noteId !== 'new' && Boolean(noteFromState)) {
 			dispatch({ type: ActionType.overrideNote, payload: noteFromState });
 		}
 	}, [noteFromState]);

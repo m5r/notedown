@@ -54,7 +54,7 @@ const Home: FunctionComponent = () => {
 			>
 				<_Home>
 					<NotesList />
-					{!!user && <HomeFooter />}
+					{Boolean(user) && <HomeFooter />}
 				</_Home>
 			</IonContent>
 		</>
