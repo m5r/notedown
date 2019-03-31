@@ -25,6 +25,15 @@ const Label = styled.div`
     padding-left: 16px;
 `;
 
+const ButtonsContainer = styled.div`
+	padding-right: 16px;
+    
+    & ion-icon {
+    	font-size: 24px;
+    	color: #80868b;
+    }
+`;
+
 const HomeFooter: FunctionComponent = () => (
 	<_HomeFooter>
 		<Link to="/note/new">
@@ -32,9 +41,11 @@ const HomeFooter: FunctionComponent = () => (
 				Take a note...
 			</Label>
 		</Link>
-		<div>
-			<IonIcon size="large" name="checkbox-outline" />
-		</div>
+		<ButtonsContainer>
+			<Link to="/list/new">
+				<IonIcon name="checkbox-outline" mode="ios" />
+			</Link>
+		</ButtonsContainer>
 	</_HomeFooter>
 );
 

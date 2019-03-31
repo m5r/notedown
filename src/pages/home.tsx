@@ -26,6 +26,7 @@ import { useStore } from '../state/store';
 // TODO: app icon
 // TODO: app launcher
 // TODO: pages transitions
+// TODO: cancel/redo
 
 const _Home = styled.div`
 	display: flex;
