@@ -9,8 +9,7 @@ import {
 	IonList,
 } from '@ionic/react';
 
-import StartingPageContainer from '../components/starting-page-container';
-import StartingPageContent from '../components/starting-page-content';
+import S from '../components/common';
 import AppUnauthentifiedHeader from '../components/app-unauthentified-header';
 
 import FirebaseServiceContext from '../firebase/context';
@@ -48,8 +47,8 @@ const Signup: FunctionComponent<RouteComponentProps> = ({ history }) => {
 			<IonContent
 				forceOverscroll={false}
 			>
-				<StartingPageContainer>
-					<StartingPageContent>
+				<S.StartingPageContainer>
+					<S.StartingPageContent>
 						<form onSubmit={e => e.preventDefault()} noValidate>
 							<IonList no-lines>
 								<IonItem>
@@ -75,14 +74,14 @@ const Signup: FunctionComponent<RouteComponentProps> = ({ history }) => {
 								</IonItem>
 							</IonList>
 						</form>
-					</StartingPageContent>
+					</S.StartingPageContent>
 
-					<StartingPageContent>
+					<S.StartingPageContent>
 						<IonButton onClick={submitSignupForm} color="dark" expand="block" fill="clear" type="submit">
 							Sign up
 						</IonButton>
-					</StartingPageContent>
-				</StartingPageContainer>
+					</S.StartingPageContent>
+				</S.StartingPageContainer>
 			</IonContent>
 		</>
 	);

@@ -9,6 +9,7 @@ import Signup from './pages/signup';
 import Logout from './pages/logout';
 import Home from './pages/home';
 import NotePage from './pages/note';
+import ListPage from './pages/list';
 
 import store from './state/store';
 import FirebaseServiceContext from './firebase/context';
@@ -32,7 +33,7 @@ const App: FunctionComponent = () => (
 									<Route path="/logout" component={Logout} exact />
 									<Route path="/home" component={Home} exact />
 									<Route path="/note/:noteId" component={NotePage} exact />
-									<Route path="/list/:listId" component={NotePage} exact />
+									<Route path="/list/:listId" component={ListPage} exact />
 									<Route path="*" render={() => <Redirect to="/" />} />
 								</Switch>
 							</IonPage>

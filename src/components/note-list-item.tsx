@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { IonIcon } from '@ionic/react';
 
+import S from './common';
+
 import { Note, NoteType } from '../state/notes';
 
 type Props = {
@@ -30,24 +32,6 @@ const Card = styled.div`
     border-radius: 8px;
     box-sizing: border-box;
 	word-break: break-word;
-`;
-
-const List = styled.ul`
-	font-size: 1.125rem;
-    font-weight: 400;
-    line-height: 1.5rem;
-    list-style: none;
-	padding: 0;
-	margin-bottom: 0;
-`;
-
-const ListItem = styled.li`
-    display: flex;
-	align-items: center;
-`;
-
-const ListItemContent = styled.span`
-	margin-left: 8px;
 `;
 
 const BottomCardMessage = styled.div`
@@ -81,19 +65,19 @@ const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 					<Title>
 						{note.title}
 					</Title>
-					<List>
+					<S.List>
 						{itemsToDisplay.map(item => (
-							<ListItem key={item.id}>
+							<S.ListItem key={item.id}>
 								<IonIcon name="square-outline" mode="md" />
-								<ListItemContent>{item.content}</ListItemContent>
-							</ListItem>
+								<S.ListItemContent>{item.content}</S.ListItemContent>
+							</S.ListItem>
 						))}
 						{hiddenItemsCount > 0 && (
 							<BottomCardMessage>
 								{bottomCardMessage}
 							</BottomCardMessage>
 						)}
-					</List>
+					</S.List>
 				</Card>
 			</Link>
 		);

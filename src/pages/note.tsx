@@ -31,7 +31,10 @@ const _Note = styled.div`
 `;
 
 const NoteTitle = styled.input`
-    color: #80868b;
+    &:placeholder {
+    	color: #80868b;
+	}
+	color #202124;
     letter-spacing: .01785714em;
     font-size: 1.175rem;
     font-weight: 500;
@@ -43,7 +46,10 @@ const NoteTitle = styled.input`
 `;
 
 const NoteContent = styled.textarea`
-    color: #80868b;
+    &:placeholder {
+    	color: #80868b;
+	}
+    color: #202124;
     letter-spacing: .01785714em;
     font-size: 0.975rem;
     font-weight: 500;
@@ -78,9 +84,10 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 
 	useBackButton(onBackButtonPressed);
 
+	const { noteId } = match.params;
 	const contentRef = useRef<HTMLTextAreaElement>(null);
 	useEffect(() => {
-		if (contentRef.current) {
+		if (noteId === 'new' && contentRef.current) {
 			contentRef.current.focus();
 		}
 	}, [contentRef.current]);
@@ -124,7 +131,6 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		return updatedNote;
 	}
 
-	const { noteId } = match.params;
 	const id = noteId === 'new' ?
 		uuidv4() :
 		noteId;

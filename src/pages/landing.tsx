@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { IonButton, IonContent, IonText } from '@ionic/react';
 import { Link } from 'react-router-dom';
 
-import StartingPageContainer from '../components/starting-page-container';
-import StartingPageContent from '../components/starting-page-content';
+import S from '../components/common';
+
 import { useAuthentication } from '../firebase/hooks';
 
 const ButtonsContainer = styled.div`
@@ -30,15 +30,15 @@ const Landing: FunctionComponent = () => {
 		<IonContent
 			forceOverscroll={false}
 		>
-			<StartingPageContainer>
-				<StartingPageContent>
+			<S.StartingPageContainer>
+				<S.StartingPageContent>
 					<IonText color="dark">
 						<Title>Notedown</Title>
 						<p>Remember everything that matters.</p>
 					</IonText>
-				</StartingPageContent>
+				</S.StartingPageContent>
 
-				<StartingPageContent>
+				<S.StartingPageContent>
 					<p>Get started</p>
 					<ButtonsContainer>
 						<IonButton class="landing-button" color="light">
@@ -48,9 +48,9 @@ const Landing: FunctionComponent = () => {
 							<LogoButton src="/img/google.svg" />
 						</IonButton>
 					</ButtonsContainer>
-				</StartingPageContent>
+				</S.StartingPageContent>
 
-				<StartingPageContent>
+				<S.StartingPageContent>
 					<ButtonsContainer>
 						<Link to='/login'>
 							<IonButton color="dark" expand="block" fill="clear">
@@ -63,8 +63,8 @@ const Landing: FunctionComponent = () => {
 							</IonButton>
 						</Link>
 					</ButtonsContainer>
-				</StartingPageContent>
-			</StartingPageContainer>
+				</S.StartingPageContent>
+			</S.StartingPageContainer>
 		</IonContent>
 	);
 };
