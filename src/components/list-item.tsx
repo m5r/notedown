@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import React, { FunctionComponent, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import { IonIcon } from '@ionic/react';
+import autosize  from 'autosize';
 
 import S from './common';
 
@@ -11,56 +12,32 @@ type Props = {
 	onChange: (nextValue: string) => void;
 };
 
-const _ListItem = styled.li<{ rows: number }>`
+const _ListItem = styled.li`
     display: flex;
 	align-items: center;
-	
-	${({ rows }) => css`
-		height: calc(31px + (${rows} * 22px));
-	`}
 `;
 
-const ListItemContent = styled.textarea<{ height: number }>`
+const ListItemContent = styled.textarea`
 	border: none;
 	outline: none;
 	width: 100%;
-	
-	${({ height }) => css`
-		height: ${height}px;
-	`}
 `;
 
 const ListItemComponent: FunctionComponent<Props> = ({ item, onChange }) => {
 	const contentRef = useRef<HTMLTextAreaElement>(null);
-	const [rows, setRows] = useState(0);
 
 	useEffect(() => {
-		function updateRows() {
-			const rows = (contentRef.current ? Math.ceil((contentRef.current.scrollHeight - 9) / 22) : 1) - 1;
-			setRows(rows);
-		}
-
 		if (contentRef.current) {
-			const rows = Math.ceil((contentRef.current.scrollHeight - 9) / 22) - 1;
-			setRows(rows);
-
-			contentRef.current.addEventListener('input', updateRows, false);
+			autosize(contentRef.current);
 		}
-
-		return () => {
-			if (contentRef.current) {
-				contentRef.current.removeEventListener('input', updateRows, false);
-			}
-		};
 	}, []);
 
 	return (
-		<_ListItem rows={rows}>
+		<_ListItem>
 			<IonIcon name={item.isDone ? 'checkbox-outline' : 'square-outline'} mode="md" />
 			<S.ListItemContent>
 				<ListItemContent
 					ref={contentRef}
-					height={26 + (rows * 22)}
 					onChange={e => onChange(e.target.value)}
 					value={item.content}
 				/>
