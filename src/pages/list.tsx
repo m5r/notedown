@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useReducer, useRef } from 'react';
 import { RouteComponentProps } from 'react-router';
 import uuidv4 from 'uuid/v4';
-import { IonContent } from '@ionic/react';
+import { IonContent, IonIcon } from '@ionic/react';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
 import Firebase from 'firebase/app';
@@ -9,15 +9,19 @@ import Firebase from 'firebase/app';
 import Loading from '../components/loading';
 import NoteHeader from '../components/note-header';
 
+import S from '../components/common';
+
 import { useStore, useActions } from '../state/store';
 import { useAuthentication } from '../firebase/hooks';
 import { List, ListItem, NoteType } from '../state/notes';
+import { useBackButton } from '../utils';
+import ListItemComponent from '../components/list-item';
 
 type RouteParams = {
 	listId: string;
 };
 
-const _Note = styled.div`
+const _List = styled.div`
     position: absolute;
     left: 0;
     right: 0;
@@ -29,8 +33,11 @@ const _Note = styled.div`
     grid-template-rows: 75px 1fr;
 `;
 
-const NoteTitle = styled.input`
-    color: #80868b;
+const ListTitle = styled.input`
+    &:placeholder {
+    	color: #80868b;
+	}
+    color: #202124;
     letter-spacing: .01785714em;
     font-size: 1.175rem;
     font-weight: 500;
@@ -41,23 +48,11 @@ const NoteTitle = styled.input`
     outline: none;
 `;
 
-const NoteContent = styled.textarea`
-    color: #80868b;
-    letter-spacing: .01785714em;
-    font-size: 0.975rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    border: none;
-    padding: 0 16px 16px;
-    width: 100%;
-    outline: none;
-`;
-
 enum ActionType {
 	updateTitle = 'updateTitle',
 	addItem = 'addItem',
 	removeItem = 'removeItem',
-	toggleItem = 'toggleItem',
+	updateItem = 'updateItem',
 	updateUserId = 'updateUserId',
 	overrideNote = 'overrideNote',
 }
@@ -69,12 +64,37 @@ type Action = {
 	type: ActionType.overrideNote,
 	payload: List,
 } | {
-	type: ActionType.addItem | ActionType.removeItem | ActionType.toggleItem;
+	type: ActionType.addItem | ActionType.removeItem | ActionType.updateItem;
 	payload: ListItem;
 }
 
+const _ListItem = styled.li`
+    display: flex;
+	align-items: center;
+`;
+
+const _DoneListItem = styled(_ListItem)`
+	text-decoration: line-through;
+	color: rgba(0,0,0,.54);
+`;
+
+const _AddListItem = styled(_ListItem)`
+	color: #80868b;
+`;
+
+const ListItemContent = styled.textarea`
+	border: none;
+	outline: none;
+`;
+
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
 	useAuthentication();
+
+	function onBackButtonPressed() {
+		history.push('/home');
+	}
+
+	useBackButton(onBackButtonPressed);
 
 	// const contentRef = useRef<HTMLTextAreaElement>(null);
 	// useEffect(() => {
@@ -90,38 +110,41 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	}
 	const debouncedSetNote = setNoteRef.current;
 
-	function reducer(note: List, action: Action): List {
+	function reducer(list: List, action: Action): List {
 		let updatedNote: List;
 
 		switch (action.type) {
 			case ActionType.updateTitle:
 				updatedNote = {
-					...note,
+					...list,
 					title: action.payload,
 				};
 				break;
 			case ActionType.addItem:
 				updatedNote = {
-					...note,
-					items: [...note.items, action.payload],
+					...list,
+					items: [...list.items, action.payload],
 				};
 				break;
 			case ActionType.removeItem:
 				updatedNote = {
-					...note,
-					items: note.items.filter(item => item.id === action.payload.id),
+					...list,
+					items: list.items.filter(item => item.id === action.payload.id),
 				};
 				break;
-			case ActionType.toggleItem:
-				const updatedItems = note.items;
+			case ActionType.updateItem:
+				const updatedItems = [...list.items];
+				const updatedItemIndex = updatedItems.findIndex(item => item.id === action.payload.id);
+				updatedItems[updatedItemIndex] = action.payload;
+
 				updatedNote = {
-					...note,
+					...list,
 					items: updatedItems,
 				};
 				break;
 			case ActionType.updateUserId:
 				updatedNote = {
-					...note,
+					...list,
 					owner: action.payload,
 				};
 				return updatedNote;
@@ -139,13 +162,13 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	const id = listId === 'new' ?
 		uuidv4() :
 		listId;
-	const notes = useStore(state => state.notes.items);
+	const lists = useStore(state => state.notes.items);
 	const user = useStore(state => state.user.user);
 
 	// peut servir quand le user ouvre l'app directement à cette page
 	const isFetching = useStore(state => state.notes.isFetching);
 
-	const noteFromState = notes.find(n => n.id === listId) as List;
+	const listFromState = lists.find(n => n.id === listId) as List;
 	const initialState: List = listId === 'new' ?
 		{
 			id,
@@ -157,9 +180,9 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 			createdAt: Firebase.firestore.FieldValue.serverTimestamp(),
 			lastModifiedAt: Firebase.firestore.FieldValue.serverTimestamp(),
 		} :
-		noteFromState!;
+		listFromState!;
 
-	const [note, dispatch] = useReducer(reducer, initialState);
+	const [list, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
 		if (listId === 'new' && user) {
@@ -168,18 +191,21 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	}, [user]);
 
 	useEffect(() => {
-		if (listId !== 'new' && Boolean(noteFromState)) {
-			dispatch({ type: ActionType.overrideNote, payload: noteFromState });
+		if (listId !== 'new' && Boolean(listFromState)) {
+			dispatch({ type: ActionType.overrideNote, payload: listFromState });
 		}
-	}, [noteFromState]);
+	}, [listFromState]);
 
-	if (!user || isFetching || !note) {
+	if (!user || isFetching || !list) {
 		return (
 			<Loading />
 		);
 	}
 
 	if (listId === 'new') {
+		const itemsToDisplay: ListItem[] = [];
+		// focus only here
+
 		return (
 			<>
 				<NoteHeader />
@@ -187,28 +213,51 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 				<IonContent
 					forceOverscroll={false}
 				>
-					<_Note>
-						<NoteTitle
+					<_List>
+						<ListTitle
 							placeholder="Title"
-							value={note.title}
+							value={list.title}
 							onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
 						/>
-						<NoteContent
+						<S.List>
+							{itemsToDisplay.map(item => (
+								<_ListItem key={item.id}>
+									<IonIcon name="square-outline" mode="md" />
+									<S.ListItemContent>{item.content}</S.ListItemContent>
+								</_ListItem>
+							))}
+						</S.List>
+						{/*<NoteContent
 							// ref={contentRef}
-							placeholder="Take a note..."
-							// value={note.content}
+							placeholder="Take a list..."
+							// value={list.content}
 							// onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
-						/>
-					</_Note>
+						/>*/}
+					</_List>
 				</IonContent>
 			</>
 		);
 	}
 
-	if (!noteFromState) {
+	if (!listFromState) {
 		history.replace('/home');
 		return null;
 	}
+
+	const { done, todo } = list.items.reduce<Record<string, ListItem[]>>((split, item) => {
+		if (item.isDone) {
+			return {
+				...split,
+				todo: split.todo,
+				done: [...split.done, item!],
+			}
+		}
+
+		return {
+			todo: [...split.todo, item!],
+			done: split.done,
+		}
+	}, { done: [], todo: [] });
 
 	return (
 		<>
@@ -217,19 +266,34 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 			<IonContent
 				forceOverscroll={false}
 			>
-				<_Note>
-					<NoteTitle
+				<_List>
+					<ListTitle
 						placeholder="Title"
-						value={note.title}
+						value={list.title}
 						onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
 					/>
-					<NoteContent
-						// ref={contentRef}
-						placeholder="Take a note..."
-						// value={note.content}
-						// onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
-					/>
-				</_Note>
+					<S.List>
+						{todo.map(item => (
+							<ListItemComponent
+								key={item.id}
+								item={item}
+								onChange={value => {
+									const nextItem: ListItem = {
+										...item,
+										content: value,
+									};
+
+									dispatch({ type: ActionType.updateItem, payload: nextItem });
+								}}
+							/>
+						))}
+
+						<_AddListItem>
+							<IonIcon name="add" mode="md" />
+							<S.ListItemContent>List item</S.ListItemContent>
+						</_AddListItem>
+					</S.List>
+				</_List>
 			</IonContent>
 		</>
 	);

@@ -45,7 +45,11 @@ const ListItem = styled.li`
 `;
 
 const ListItemContent = styled.span`
+	display: flex;
+    width: 100%;
+	height: 100%;
 	margin-left: 8px;
+    align-items: center;
 `;
 
 const S = {

@@ -88,7 +88,7 @@ const notes: NotesModel = {
 		if (currentNoteIndex === -1) {
 			// new note
 			const nextItems = [...state.items, note];
-			// firebaseService.setNote(note);
+			firebaseService.setNote(note);
 
 			return {
 				...state,
@@ -99,7 +99,7 @@ const notes: NotesModel = {
 		const nextItems = [...state.items];
 		nextItems[currentNoteIndex] = note;
 
-		// firebaseService.setNote(note);
+		firebaseService.setNote(note);
 
 		return {
 			...state,
