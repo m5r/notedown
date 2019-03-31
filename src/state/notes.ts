@@ -1,4 +1,5 @@
-import { Action, Thunk, Select, action, thunk, select } from 'easy-peasy';
+import { Plugins } from '@capacitor/core';
+import { Action, Thunk, action, thunk } from 'easy-peasy';
 import Firebase from 'firebase/app';
 
 import firebaseService from '../firebase';
@@ -62,6 +63,10 @@ const notes: NotesModel = {
 		const notes = await firebaseService.fetchNotes(userUid);
 		actions.setNotes(notes);
 
+		if (Plugins.SplashScreen) {
+			Plugins.SplashScreen.hide();
+		}
+
 		actions.setIsFetching(false);
 	}),
 	setNotes: action((state, payload) => ({
@@ -83,7 +88,7 @@ const notes: NotesModel = {
 		if (currentNoteIndex === -1) {
 			// new note
 			const nextItems = [...state.items, note];
-			firebaseService.setNote(note);
+			// firebaseService.setNote(note);
 
 			return {
 				...state,
@@ -94,7 +99,7 @@ const notes: NotesModel = {
 		const nextItems = [...state.items];
 		nextItems[currentNoteIndex] = note;
 
-		firebaseService.setNote(note);
+		// firebaseService.setNote(note);
 
 		return {
 			...state,

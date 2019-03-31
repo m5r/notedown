@@ -4,6 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 import FirebaseServiceContext from './context';
 import { useActions, useStore } from '../state/store';
+import { Plugins } from '@capacitor/core';
 
 export const useAuthentication = () => {
 	const firebase = useContext(FirebaseServiceContext);
@@ -31,17 +32,22 @@ export const useAuthentication = () => {
 
 			if (location.pathname === '/') {
 				history.replace('/home');
-				return;
 			}
+
+			return;
 		}
 
-		if (
-			!initialising &&
-			!user &&
-			location.pathname !== '/login' &&
-			location.pathname !== '/signup'
-		) {
-			history.replace('/');
+		if (!initialising && !user) {
+			if (Plugins.SplashScreen) {
+				Plugins.SplashScreen.hide();
+			}
+
+			if (
+				location.pathname !== '/login' &&
+				location.pathname !== '/signup'
+			) {
+				history.replace('/');
+			}
 		}
-	}, [user]);
+	}, [user, initialising]);
 };

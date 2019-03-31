@@ -3,5 +3,10 @@
   "appName": "Notedown",
   "bundledWebRuntime": false,
   "webDir": "build",
-  "linuxAndroidStudioPath": "/home/mokhtar/.local/share/android-studio/bin/studio.sh"
+  "linuxAndroidStudioPath": "/home/mokhtar/.local/share/android-studio/bin/studio.sh",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
 }
