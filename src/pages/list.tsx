@@ -83,8 +83,6 @@ const PaddedList = styled(S.List)`
 `;
 
 // 	TODO HERE:
-//		both: style textarea 1 ligne
-// 		edit: nouvel item
 //		new : tout
 
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
@@ -125,7 +123,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 					...list,
 					items: [...list.items, action.payload],
 				};
-				break;
+				return updatedNote;
 			case ActionType.removeItem:
 				updatedNote = {
 					...list,
@@ -155,6 +153,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		}
 
 		debouncedSetNote(updatedNote);
+
 		return updatedNote;
 	}
 
@@ -307,6 +306,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 								item={item}
 								onCheckboxClick={() => onCheckboxClick(item)}
 								onContentChange={(value) => onContentChange(value, item)}
+								isLatestItem={item.content === '' && todo[todo.length - 1].id === item.id}
 							/>
 						))}
 
