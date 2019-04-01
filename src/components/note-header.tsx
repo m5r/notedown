@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { IonButton, IonButtons, IonHeader, IonIcon, IonToolbar } from '@ionic/react';
 import { Plugins } from '@capacitor/core';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -11,6 +11,7 @@ type RouteParams = { noteId: string };
 type Props = { note: Text | List } & RouteComponentProps<RouteParams>;
 
 const NoteHeader: FunctionComponent<Props> = ({ history, match, note }) => {
+	const notes = useStore(state => state.notes.items);
 	const user = useStore(state => state.user.user);
 	const fetchNotes = useActions(actions => actions.notes.fetchNotes);
 	const deleteNote = useActions(actions => actions.notes.deleteNote);
@@ -41,11 +42,10 @@ const NoteHeader: FunctionComponent<Props> = ({ history, match, note }) => {
 		deleteNote(note.id);
 	}
 
-	const shouldDisplayNotifyMeButton = noteId !== 'new' ||
-		(
-			(note.type === NoteType.Text && note.content !== '') ||
-			(note.type === NoteType.List && note.items.length > 0 && note.items[0].content !== '')
-		);
+	const [shouldDisplayNotifyMeButton, setShouldDisplayNotifyMeButton] = useState(noteId !== 'new');
+	useEffect(() => {
+		setShouldDisplayNotifyMeButton(notes.findIndex(item => item.id === note.id) > -1);
+	}, [notes]);
 
 	function handleNotifyMeButton() {
 
