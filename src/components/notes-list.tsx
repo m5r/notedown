@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import Loading from './loading';
+import LoadingList from './loading-list';
 import EmptyNotesList from './empty-notes-list';
 import NoteListItem from './note-list-item';
 import BottomFade from './bottom-fade';
@@ -39,7 +39,7 @@ const NotesList: FunctionComponent = () => {
 
 	if (isLoading) {
 		return (
-			<Loading />
+			<LoadingList />
 		);
 	}
 
