@@ -1,11 +1,13 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useContext, useState } from 'react';
 import styled from 'styled-components';
 import { IonButton, IonContent, IonText } from '@ionic/react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import S from '../components/common';
 
 import { useAuthentication } from '../firebase/hooks';
+import FirebaseServiceContext from '../firebase/context';
+import { useActions } from '../state/store';
 
 const ButtonsContainer = styled.div`
   display: grid;
@@ -23,8 +25,29 @@ const Title = styled.h1`
   font-size: 32px;
 `;
 
-const Landing: FunctionComponent = () => {
+const Landing: FunctionComponent<RouteComponentProps> = ({ history }) => {
 	useAuthentication();
+
+	const [isLoading, setIsLoading] = useState(false);
+	const setUser = useActions(actions => actions.user.setUser);
+	const firebase = useContext(FirebaseServiceContext);
+
+	async function handleGoogleLoginButton() {
+		try {
+			setIsLoading(true);
+
+			const userCredential = await firebase.logInWithGoogle();
+
+			setIsLoading(false);
+			setUser(userCredential.user);
+
+			history.replace('/home');
+		} catch (e) {
+			setIsLoading(false);
+
+			alert(e.message);
+		}
+	}
 
 	return (
 		<IonContent
@@ -41,10 +64,20 @@ const Landing: FunctionComponent = () => {
 				<S.StartingPageContent>
 					<p>Get started</p>
 					<ButtonsContainer>
-						<IonButton class="landing-button" color="light">
+						<IonButton
+							onClick={() => alert('not available yet duh')}
+							disabled={isLoading}
+							class="landing-button"
+							color="light"
+						>
 							<LogoButton src="/img/facebook.svg" />
 						</IonButton>
-						<IonButton class="landing-button" color="light">
+						<IonButton
+							onClick={handleGoogleLoginButton}
+							disabled={isLoading}
+							class="landing-button"
+							color="light"
+						>
 							<LogoButton src="/img/google.svg" />
 						</IonButton>
 					</ButtonsContainer>
@@ -69,4 +102,4 @@ const Landing: FunctionComponent = () => {
 	);
 };
 
-export default Landing;
+export default withRouter(Landing);

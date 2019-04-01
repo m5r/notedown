@@ -15,6 +15,7 @@ const config = {
 
 export class FirebaseService {
 	auth: app.auth.Auth;
+	googleProvider: app.auth.GoogleAuthProvider;
 	db: app.firestore.Firestore;
 
 	constructor() {
@@ -23,9 +24,8 @@ export class FirebaseService {
 		}
 
 		this.auth = app.auth();
+		this.googleProvider = new app.auth.GoogleAuthProvider();
 		this.db = app.firestore();
-
-		(window as any).fbase = this;
 	}
 
 	/* auth methods */
@@ -39,6 +39,10 @@ export class FirebaseService {
 
 	async logOut() {
 		return this.auth.signOut();
+	}
+
+	async logInWithGoogle() {
+		return this.auth.signInWithPopup(this.googleProvider);
 	}
 
 	/* db methods */
