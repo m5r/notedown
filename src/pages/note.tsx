@@ -181,7 +181,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 
 	return (
 		<>
-			<NoteHeader />
+			<NoteHeader note={note} />
 
 			<IonContent
 				forceOverscroll={false}

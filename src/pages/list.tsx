@@ -18,7 +18,7 @@ import { useBackButton } from '../utils';
 import ListItemComponent from '../components/list-item';
 
 type RouteParams = {
-	listId: string;
+	noteId: string;
 };
 
 const _List = styled.div`
@@ -147,18 +147,18 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		return updatedNote;
 	}
 
-	const { listId } = match.params;
-	const id = listId === 'new' ?
+	const { noteId } = match.params;
+	const id = noteId === 'new' ?
 		uuidv4() :
-		listId;
+		noteId;
 	const lists = useStore(state => state.notes.items);
 	const user = useStore(state => state.user.user);
 
 	// peut servir quand le user ouvre l'app directement à cette page
 	const isFetching = useStore(state => state.notes.isFetching);
 
-	const listFromState = lists.find(n => n.id === listId) as List;
-	const initialState: List = listId === 'new' ?
+	const listFromState = lists.find(n => n.id === noteId) as List;
+	const initialState: List = noteId === 'new' ?
 		{
 			id,
 			owner: user ? user.uid : '',
@@ -174,19 +174,19 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	const [list, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
-		if (listId === 'new' && user) {
+		if (noteId === 'new' && user) {
 			dispatch({ type: ActionType.updateUserId, payload: user.uid });
 		}
 	}, [user]);
 
 	useEffect(() => {
-		if (listId !== 'new' && Boolean(listFromState)) {
+		if (noteId !== 'new' && Boolean(listFromState)) {
 			dispatch({ type: ActionType.overrideNote, payload: listFromState });
 		}
 	}, [listFromState]);
 
 	useEffect(() => {
-		if (listId === 'new') {
+		if (noteId === 'new') {
 			const newItem: ListItem = {
 				id: uuidv4(),
 				isDone: false,
@@ -203,7 +203,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		);
 	}
 
-	if (listId !== 'new' && !listFromState) {
+	if (noteId !== 'new' && !listFromState) {
 		history.replace('/home');
 		return null;
 	}
@@ -253,7 +253,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 
 	return (
 		<>
-			<NoteHeader />
+			<NoteHeader note={list} />
 
 			<IonContent
 				forceOverscroll={false}

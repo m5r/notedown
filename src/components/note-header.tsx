@@ -1,13 +1,15 @@
 import React, { FunctionComponent } from 'react';
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonButton, IonIcon } from '@ionic/react';
+import { IonButton, IonButtons, IonHeader, IonIcon, IonToolbar } from '@ionic/react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { useStore, useActions } from '../state/store';
 
-type RouteParams = {
-	noteId: string;
-};
+import { useActions, useStore } from '../state/store';
+import { List, Text } from '../state/notes';
 
-const NoteHeader: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
+type RouteParams = { noteId: string };
+
+type Props = { note: Text | List } & RouteComponentProps<RouteParams>;
+
+const NoteHeader: FunctionComponent<Props> = ({ history, match, note }) => {
 	const user = useStore(state => state.user.user);
 	const fetchNotes = useActions(actions => actions.notes.fetchNotes);
 	const deleteNote = useActions(actions => actions.notes.deleteNote);
