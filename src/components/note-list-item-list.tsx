@@ -14,6 +14,7 @@ type Props = {
 
 const BottomCardMessage = styled.div`
 	padding-top: 8px;
+	font-size: 1rem;
 `;
 
 const NoteListItemList: FunctionComponent<Props> = ({ note }) => {

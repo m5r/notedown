@@ -21,7 +21,7 @@ import { useStore } from '../state/store';
 // TODO: recherche
 // DONE: notification rappel (date précise ou "dans 1 jour"?)
 
-// TODO: nicer fonts
+// DONE: nicer fonts
 // TODO: login/signup feedback (loading animation)
 // TODO: app icon
 // TODO: app launcher
