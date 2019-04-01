@@ -1,7 +1,7 @@
-import React, { FunctionComponent, useEffect, useRef } from 'react';
+import React, { FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
 import { IonIcon } from '@ionic/react';
-import autosize from 'autosize';
+import AutosizeTextarea from 'react-autosize-textarea';
 
 import S from './common';
 
@@ -31,26 +31,13 @@ const _ListItem = styled.li<{ isDone: boolean, isFirst?: boolean }>`
 	`};
 `;
 
-const ListItemContent = styled.textarea`
+const ListItemContent = styled(AutosizeTextarea)`
 	border: none;
 	outline: none;
 	width: 100%;
-	height: 100%;
 `;
 
 const ListItemComponent: FunctionComponent<Props> = ({ item, isFirst, onCheckboxClick, onContentChange }) => {
-	const contentRef = useRef<HTMLTextAreaElement>(null);
-
-	(window as any).autosize = autosize;
-	(window as any).ddd = (window as any).ddd || [];
-	(window as any).ddd.push(contentRef);
-
-	useEffect(() => {
-		if (contentRef.current) {
-			autosize(contentRef.current);
-		}
-	}, []);
-
 	return (
 		<_ListItem isFirst={isFirst} isDone={item.isDone}>
 			<IonIcon
@@ -60,8 +47,7 @@ const ListItemComponent: FunctionComponent<Props> = ({ item, isFirst, onCheckbox
 			/>
 			<S.ListItemContent>
 				<ListItemContent
-					ref={contentRef}
-					onChange={e => onContentChange(e.target.value)}
+					onChange={e => onContentChange(e.currentTarget.value)}
 					value={item.content}
 				/>
 			</S.ListItemContent>
