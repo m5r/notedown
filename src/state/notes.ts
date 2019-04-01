@@ -52,6 +52,10 @@ export type NotesModel = {
 	setHasFetchedOnce: Action<NotesModel, boolean>;
 }
 
+async function sleep(ms: number): Promise<void> {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const notes: NotesModel = {
 	items: [],
 	isFetching: false,
@@ -65,7 +69,8 @@ const notes: NotesModel = {
 		actions.setHasFetchedOnce(true);
 		actions.setIsFetching(true);
 
-		const notes = await firebaseService.fetchNotes(userUid);
+		// wait at least 500ms to not have really fast and flashy UI states jumps
+		const [notes] = await Promise.all([firebaseService.fetchNotes(userUid), sleep(500)]);
 		actions.setNotes(notes);
 
 		try {

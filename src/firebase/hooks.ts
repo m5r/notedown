@@ -10,6 +10,7 @@ export const useAuthentication = () => {
 	const firebase = useContext(FirebaseServiceContext);
 	const stateUser = useStore(state => state.user.user);
 	const stateNotes = useStore(state => state.notes.items);
+	const hasFetchedOnce = useStore(state => state.notes.hasFetchedOnce);
 	const setUser = useActions(actions => actions.user.setUser);
 	const fetchNotes = useActions(actions => actions.notes.fetchNotes);
 	const { history } = useReactRouter();
@@ -22,7 +23,7 @@ export const useAuthentication = () => {
 		}
 
 		if (firebase.auth.currentUser) {
-			if (stateNotes.length === 0) {
+			if (stateNotes.length === 0 && !hasFetchedOnce) {
 				fetchNotes(firebase.auth.currentUser.uid);
 			}
 

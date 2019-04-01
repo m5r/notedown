@@ -39,7 +39,6 @@ const NotesList: FunctionComponent = () => {
 	const isLoading = !user || isFetching;
 
 	if (isLoading || !hasFetchedOnce) {
-		console.log('render');
 		return (
 			<LoadingList />
 		);
