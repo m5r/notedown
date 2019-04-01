@@ -45,9 +45,7 @@ const NotesList: FunctionComponent = () => {
 
 	if (notes.length === 0) {
 		return (
-			<_NotesList>
-				<EmptyNotesList />
-			</_NotesList>
+			<EmptyNotesList />
 		);
 	}
 

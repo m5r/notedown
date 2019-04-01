@@ -28,15 +28,19 @@ const Signup: FunctionComponent<RouteComponentProps> = ({ history }) => {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	const firebase = useContext(FirebaseServiceContext);
 	const setUser = useActions(actions => actions.user.setUser);
 
 	async function submitSignupForm() {
 		try {
+			setIsLoading(true);
 			const userCredential = await firebase.createUser(email, password);
+			setIsLoading(false);
 			setUser(userCredential.user);
 			history.replace('/home');
 		} catch (e) {
+			setIsLoading(false);
 			alert(e.message);
 		}
 	}
@@ -77,8 +81,15 @@ const Signup: FunctionComponent<RouteComponentProps> = ({ history }) => {
 					</S.StartingPageContent>
 
 					<S.StartingPageContent>
-						<IonButton onClick={submitSignupForm} color="dark" expand="block" fill="clear" type="submit">
-							Sign up
+						<IonButton
+							onClick={submitSignupForm}
+							color="dark"
+							expand="block"
+							fill="clear"
+							type="submit"
+							disabled={isLoading}
+						>
+							{isLoading ? 'Signing up...' : 'Sign up'}
 						</IonButton>
 					</S.StartingPageContent>
 				</S.StartingPageContainer>

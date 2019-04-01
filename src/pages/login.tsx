@@ -54,15 +54,19 @@ const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	const firebase = useContext(FirebaseServiceContext);
 	const setUser = useActions(actions => actions.user.setUser);
 
 	async function submitLoginForm() {
 		try {
+			setIsLoading(true);
 			const userCredential = await firebase.logIn(email, password);
+			setIsLoading(false);
 			setUser(userCredential.user);
 			history.replace('/home');
 		} catch (e) {
+			setIsLoading(false);
 			alert(e.message);
 		}
 	}
@@ -104,8 +108,15 @@ const Login: FunctionComponent<RouteComponentProps> = ({ history }) => {
 					</LoginContent>
 
 					<LoginContent>
-						<IonButton onClick={submitLoginForm} color="dark" expand="block" fill="clear" type="submit">
-							Log in
+						<IonButton
+							onClick={submitLoginForm}
+							color="dark"
+							expand="block"
+							fill="clear"
+							type="submit"
+							disabled={isLoading}
+						>
+							{isLoading ? 'Logging in...' : 'Log in'}
 						</IonButton>
 					</LoginContent>
 				</LoginContainer>
