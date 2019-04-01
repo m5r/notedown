@@ -21,13 +21,13 @@ export const useAuthentication = () => {
 			return;
 		}
 
-		if (user) {
+		if (firebase.auth.currentUser) {
 			if (stateNotes.length === 0) {
-				fetchNotes(user.uid);
+				fetchNotes(firebase.auth.currentUser.uid);
 			}
 
 			if (!stateUser) {
-				setUser(user);
+				setUser(firebase.auth.currentUser);
 			}
 
 			if (location.pathname === '/') {
@@ -37,7 +37,7 @@ export const useAuthentication = () => {
 			return;
 		}
 
-		if (!initialising && !user) {
+		if (!initialising && !firebase.auth.currentUser) {
 			try {
 				if (Plugins.SplashScreen) {
 					Plugins.SplashScreen.hide();
@@ -53,5 +53,5 @@ export const useAuthentication = () => {
 				history.replace('/');
 			}
 		}
-	}, [user, initialising]);
+	}, [firebase.auth.currentUser, initialising]);
 };

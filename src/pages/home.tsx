@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/react';
 import styled from 'styled-components';
 
 import NotesList from '../components/notes-list';
@@ -7,6 +7,7 @@ import HomeFooter from '../components/home-footer';
 
 import { useAuthentication } from '../firebase/hooks';
 import { useStore } from '../state/store';
+import { Link } from 'react-router-dom';
 
 // DONE: liste des notes sous forme de masonry
 // DONE: footer avec "Take a note..."
@@ -46,6 +47,13 @@ const Home: FunctionComponent = () => {
 					<IonTitle>
 						Notedown
 					</IonTitle>
+					<IonButtons slot="end">
+						<Link to="/logout">
+							<IonButton color="dark">
+								<IonIcon name="log-out" />
+							</IonButton>
+						</Link>
+					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
 
