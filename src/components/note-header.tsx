@@ -1,9 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import { IonButton, IonButtons, IonHeader, IonIcon, IonToolbar } from '@ionic/react';
+import { Plugins } from '@capacitor/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { useActions, useStore } from '../state/store';
-import { List, Text } from '../state/notes';
+import { List, NoteType, Text } from '../state/notes';
 
 type RouteParams = { noteId: string };
 
@@ -14,6 +15,8 @@ const NoteHeader: FunctionComponent<Props> = ({ history, match, note }) => {
 	const fetchNotes = useActions(actions => actions.notes.fetchNotes);
 	const deleteNote = useActions(actions => actions.notes.deleteNote);
 
+	const { noteId } = match.params;
+
 	function goBackToHome() {
 		history.push('/home');
 
@@ -22,12 +25,30 @@ const NoteHeader: FunctionComponent<Props> = ({ history, match, note }) => {
 		}
 	}
 
-	function handleDeleteButtonClick() {
-		if (match.params.noteId !== 'new') {
-			deleteNote(match.params.noteId);
+	async function handleDeleteButtonClick() {
+		if (Plugins.Modals) {
+			const result = await Plugins.Modals.confirm({
+				title: 'You are about to delete this note',
+				message: 'Are you sure you want to delete it ?',
+			});
+
+			if (!result.value) {
+				return;
+			}
 		}
 
-		history.push('/home');
+		history.replace('/home');
+		deleteNote(note.id);
+	}
+
+	const shouldDisplayNotifyMeButton = noteId !== 'new' ||
+		(
+			(note.type === NoteType.Text && note.content !== '') ||
+			(note.type === NoteType.List && note.items.length > 0 && note.items[0].content !== '')
+		);
+
+	function handleNotifyMeButton() {
+
 	}
 
 	return (
@@ -42,6 +63,13 @@ const NoteHeader: FunctionComponent<Props> = ({ history, match, note }) => {
 					</IonButton>
 				</IonButtons>
 				<IonButtons slot="end">
+					{
+						shouldDisplayNotifyMeButton && (
+							<IonButton onClick={handleNotifyMeButton}>
+								<IonIcon icon="notifications" color="dark" mode="md" />
+							</IonButton>
+						)
+					}
 					<IonButton onClick={handleDeleteButtonClick}>
 						<IonIcon icon="trash" color="dark" mode="md" />
 					</IonButton>
