@@ -71,20 +71,11 @@ type Action = {
 const _ListItem = styled.li`
     display: flex;
 	align-items: center;
-`;
-
-const _DoneListItem = styled(_ListItem)`
-	text-decoration: line-through;
-	color: rgba(0,0,0,.54);
+	padding: 8px 0;
 `;
 
 const _AddListItem = styled(_ListItem)`
 	color: #80868b;
-`;
-
-const ListItemContent = styled.textarea`
-	border: none;
-	outline: none;
 `;
 
 const PaddedList = styled(S.List)`
@@ -254,14 +245,32 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 				...split,
 				todo: split.todo,
 				done: [...split.done, item!],
-			}
+			};
 		}
 
 		return {
 			todo: [...split.todo, item!],
 			done: split.done,
-		}
+		};
 	}, { done: [], todo: [] });
+
+	function onContentChange(value: string, item: ListItem) {
+		const nextItem: ListItem = {
+			...item,
+			content: value,
+		};
+
+		dispatch({ type: ActionType.updateItem, payload: nextItem });
+	}
+
+	function onCheckboxClick(item: ListItem) {
+		const nextItem: ListItem = {
+			...item,
+			isDone: !item.isDone,
+		};
+
+		dispatch({ type: ActionType.updateItem, payload: nextItem });
+	}
 
 	return (
 		<>
@@ -281,22 +290,8 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 							<ListItemComponent
 								key={item.id}
 								item={item}
-								onCheckboxClick={() => {
-									const nextItem: ListItem = {
-										...item,
-										isDone: !item.isDone,
-									};
-
-									dispatch({ type: ActionType.updateItem, payload: nextItem });
-								}}
-								onContentChange={value => {
-									const nextItem: ListItem = {
-										...item,
-										content: value,
-									};
-
-									dispatch({ type: ActionType.updateItem, payload: nextItem });
-								}}
+								onCheckboxClick={() => onCheckboxClick(item)}
+								onContentChange={(value) => onContentChange(value, item)}
 							/>
 						))}
 
@@ -304,6 +299,16 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 							<IonIcon name="add" mode="md" />
 							<S.ListItemContent>List item</S.ListItemContent>
 						</_AddListItem>
+
+						{done.map((item, index) => (
+							<ListItemComponent
+								key={item.id}
+								isFirst={index === 0}
+								item={item}
+								onCheckboxClick={() => onCheckboxClick(item)}
+								onContentChange={(value) => onContentChange(value, item)}
+							/>
+						))}
 					</PaddedList>
 				</_List>
 			</IonContent>
