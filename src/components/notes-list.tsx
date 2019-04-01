@@ -34,10 +34,12 @@ type NotesColumns = {
 const NotesList: FunctionComponent = () => {
 	const user = useStore(state => state.user.user);
 	const isFetching = useStore(state => state.notes.isFetching);
+	const hasFetchedOnce = useStore(state => state.notes.hasFetchedOnce);
 	const notes = useStore(state => state.notes.items);
 	const isLoading = !user || isFetching;
 
-	if (isLoading) {
+	if (isLoading || !hasFetchedOnce) {
+		console.log('render');
 		return (
 			<LoadingList />
 		);

@@ -42,22 +42,27 @@ export type Note = Text | List;
 export type NotesModel = {
 	items: Note[];
 	isFetching: boolean;
+	hasFetchedOnce: boolean;
 
 	fetchNotes: Thunk<NotesModel, string>;
 	setNotes: Action<NotesModel, Note[]>;
 	setIsFetching: Action<NotesModel, boolean>;
 	setNote: Action<NotesModel, Note>;
 	deleteNote: Action<NotesModel, string>;
+	setHasFetchedOnce: Action<NotesModel, boolean>;
 }
 
 const notes: NotesModel = {
 	items: [],
 	isFetching: false,
+	hasFetchedOnce: false,
+
 	fetchNotes: thunk(async (actions, userUid, { getState }) => {
 		if (getState().isFetching) {
 			return;
 		}
 
+		actions.setHasFetchedOnce(true);
 		actions.setIsFetching(true);
 
 		const notes = await firebaseService.fetchNotes(userUid);
@@ -80,6 +85,10 @@ const notes: NotesModel = {
 	setIsFetching: action((state, payload) => ({
 		...state,
 		isFetching: payload,
+	})),
+	setHasFetchedOnce: action((state, payload) => ({
+		...state,
+		hasFetchedOnce: payload,
 	})),
 	setNote: action((state, payload) => {
 		const currentNoteIndex = state.items.findIndex(item => item.id === payload.id);
