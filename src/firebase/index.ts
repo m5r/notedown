@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import { Note } from '../state/notes';
+import { FirebaseAuthentication } from '@ionic-native/firebase-authentication';
 
 const config = {
 	apiKey: 'AIzaSyDoLLKnWr1jOJpA6PrQ81ooZGXVq4eZlE0',
@@ -16,6 +17,7 @@ const config = {
 export class FirebaseService {
 	auth: app.auth.Auth;
 	googleProvider: app.auth.GoogleAuthProvider;
+	facebookProvider: app.auth.FacebookAuthProvider;
 	db: app.firestore.Firestore;
 
 	constructor() {
@@ -25,6 +27,7 @@ export class FirebaseService {
 
 		this.auth = app.auth();
 		this.googleProvider = new app.auth.GoogleAuthProvider();
+		this.facebookProvider = new app.auth.FacebookAuthProvider();
 		this.db = app.firestore();
 	}
 
@@ -42,7 +45,25 @@ export class FirebaseService {
 	}
 
 	async logInWithGoogle() {
-		return this.auth.signInWithPopup(this.googleProvider);
+		const test = await FirebaseAuthentication.useAppLanguage();
+		const isWeb = test.error === 'cordova_not_available';
+
+		if (isWeb) {
+			return this.auth.signInWithPopup(this.googleProvider);
+		}
+
+		return FirebaseAuthentication.signInWithGoogle('1:353275719484:android:764d2cb7da3280eb', 'AIzaSyBIzjdn-8BYKUnHiXFt_UsC6TGSZq7cNNA-8BYKUnHiXFt_UsC6TGSZq7cNNA');
+	}
+
+	async logInWithFacebook() {
+		const test = await FirebaseAuthentication.useAppLanguage();
+		const isWeb = test.error === 'cordova_not_available';
+
+		if (isWeb) {
+			return this.auth.signInWithPopup(this.facebookProvider);
+		}
+
+		return FirebaseAuthentication.signInWithFacebook('7078a53ee9d7b9012351e61ce75e701a');
 	}
 
 	/* db methods */

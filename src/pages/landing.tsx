@@ -49,6 +49,23 @@ const Landing: FunctionComponent<RouteComponentProps> = ({ history }) => {
 		}
 	}
 
+	async function handleFacebookLoginButton() {
+		try {
+			setIsLoading(true);
+
+			const userCredential = await firebase.logInWithFacebook();
+
+			setIsLoading(false);
+			setUser(userCredential.user);
+
+			history.replace('/home');
+		} catch (e) {
+			setIsLoading(false);
+
+			alert(e.message);
+		}
+	}
+
 	return (
 		<IonContent
 			forceOverscroll={false}
@@ -65,7 +82,7 @@ const Landing: FunctionComponent<RouteComponentProps> = ({ history }) => {
 					<p>Get started</p>
 					<ButtonsContainer>
 						<IonButton
-							onClick={() => alert('not available yet duh')}
+							onClick={handleFacebookLoginButton}
 							disabled={isLoading}
 							class="landing-button"
 							color="light"
