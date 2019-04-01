@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 import { LocalNotification, LocalNotificationScheduleResult, Plugins } from '@capacitor/core';
+
+import { NoteType } from './state/notes';
 
 export function useBackButton(onBackButtonPressed: VoidFunction) {
 	useEffect(() => {
@@ -9,22 +11,48 @@ export function useBackButton(onBackButtonPressed: VoidFunction) {
 	}, []);
 }
 
-export async function registerNotification(notification: LocalNotification): Promise<LocalNotificationScheduleResult | undefined> {
-	if (Plugins.LocalNotifications) {
-		if (await Plugins.LocalNotifications.areEnabled()) {
-			/*const notification: LocalNotification = {
-				title: 'Notification from Notedown',
-				body: 'This is the notification body',
-				id: 0,
-				schedule: {
-					at: new Date(Date.now() + 5000),
-				},
-			};*/
-			const options = {
-				notifications: [notification],
-			};
-
-			return Plugins.LocalNotifications.schedule(options);
+async function areNotificationsAvailable(): Promise<boolean> {
+	try {
+		if (!Plugins.LocalNotifications) {
+			return false;
 		}
+
+		const { value } = await Plugins.LocalNotifications.areEnabled();
+
+		return value;
+
+	} catch (e) {
+		return false;
+	}
+}
+
+type NotificationExtra = {
+	id: string;
+	type: NoteType;
+};
+
+// Pas réussi à se servir des extras pour afficher directement la page de la note dont on vient d'etre notifié
+const pendingNotification = { current: null };
+export async function useNotifications(): Promise<RefObject<NotificationExtra | null>> {
+	if (await areNotificationsAvailable()) {
+		Plugins.LocalNotifications!.addListener('localNotificationActionPerformed', (n) => {
+			const notification = n.notificationRequest as LocalNotification;
+			// const noteTypeRoute = extra.type === NoteType.Text ? 'note' : 'list';
+			// const path = `/${noteTypeRoute}/${extra.id}`;
+
+			pendingNotification.current = notification.extra;
+		});
+	}
+
+	return pendingNotification;
+}
+
+export async function registerNotification(notification: LocalNotification): Promise<LocalNotificationScheduleResult | undefined> {
+	if (await areNotificationsAvailable()) {
+		const options = {
+			notifications: [notification],
+		};
+
+		return Plugins.LocalNotifications!.schedule(options);
 	}
 }

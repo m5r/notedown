@@ -2,6 +2,8 @@ import React, { FunctionComponent } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { IonApp, IonSplitPane, IonPage } from '@ionic/react';
 import { StoreProvider } from 'easy-peasy';
+import '@ionic/core/css/core.css';
+import '@ionic/core/css/ionic.bundle.css';
 
 import Landing from './pages/landing';
 import Login from './pages/login';
@@ -15,8 +17,6 @@ import store from './state/store';
 import FirebaseServiceContext from './firebase/context';
 
 import firebaseService from './firebase';
-import '@ionic/core/css/core.css';
-import '@ionic/core/css/ionic.bundle.css';
 
 const App: FunctionComponent = () => (
 	<StoreProvider store={store}>

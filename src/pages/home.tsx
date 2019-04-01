@@ -19,7 +19,7 @@ import { useStore } from '../state/store';
 // DONE: modifier une liste
 // TODO: toggle switch format masonry/liste
 // TODO: recherche
-// TODO: notification rappel (date précise ou "dans 1 jour"?)
+// DONE: notification rappel (date précise ou "dans 1 jour"?)
 
 // TODO: nicer fonts
 // TODO: login/signup feedback (loading animation)

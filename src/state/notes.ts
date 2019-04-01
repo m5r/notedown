@@ -63,8 +63,12 @@ const notes: NotesModel = {
 		const notes = await firebaseService.fetchNotes(userUid);
 		actions.setNotes(notes);
 
-		if (Plugins.SplashScreen) {
-			Plugins.SplashScreen.hide();
+		try {
+			if (Plugins.SplashScreen) {
+				Plugins.SplashScreen.hide();
+			}
+		} catch (e) {
+			console.info('The SplashScreen plugin is not available');
 		}
 
 		actions.setIsFetching(false);

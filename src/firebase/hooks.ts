@@ -38,8 +38,12 @@ export const useAuthentication = () => {
 		}
 
 		if (!initialising && !user) {
-			if (Plugins.SplashScreen) {
-				Plugins.SplashScreen.hide();
+			try {
+				if (Plugins.SplashScreen) {
+					Plugins.SplashScreen.hide();
+				}
+			} catch (e) {
+				console.info('The SplashScreen plugin is not available');
 			}
 
 			if (
