@@ -87,7 +87,7 @@ const notes: NotesModel = {
 
 		if (currentNoteIndex === -1) {
 			// new note
-			const nextItems = [...state.items, note];
+			const nextItems = [note, ...state.items];
 			firebaseService.setNote(note);
 
 			return {

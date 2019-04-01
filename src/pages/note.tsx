@@ -174,33 +174,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		);
 	}
 
-	if (noteId === 'new') {
-		return (
-			<>
-				<NoteHeader />
-
-				<IonContent
-					forceOverscroll={false}
-				>
-					<_Note>
-						<NoteTitle
-							placeholder="Title"
-							value={note.title}
-							onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
-						/>
-						<NoteContent
-							ref={contentRef}
-							placeholder="Take a note..."
-							value={note.content}
-							onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
-						/>
-					</_Note>
-				</IonContent>
-			</>
-		);
-	}
-
-	if (!noteFromState) {
+	if (noteId !== 'new' && !noteFromState) {
 		history.replace('/home');
 		return null;
 	}

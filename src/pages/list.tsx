@@ -82,9 +82,6 @@ const PaddedList = styled(S.List)`
 	padding: 0 16px 16px;
 `;
 
-// 	TODO HERE:
-//		new : tout
-
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
 	useAuthentication();
 
@@ -93,13 +90,6 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 	}
 
 	useBackButton(onBackButtonPressed);
-
-	// const contentRef = useRef<HTMLTextAreaElement>(null);
-	// useEffect(() => {
-	// 	if (contentRef.current) {
-	// 		contentRef.current.focus();
-	// 	}
-	// }, [contentRef.current]);
 
 	const setNote = useActions(actions => actions.notes.setNote);
 	const setNoteRef = useRef<typeof setNote | null>(null);
@@ -195,50 +185,25 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		}
 	}, [listFromState]);
 
+	useEffect(() => {
+		if (listId === 'new') {
+			const newItem: ListItem = {
+				id: uuidv4(),
+				isDone: false,
+				content: '',
+			};
+
+			dispatch({ type: ActionType.addItem, payload: newItem });
+		}
+	}, []);
+
 	if (!user || isFetching || !list) {
 		return (
 			<Loading />
 		);
 	}
 
-	if (listId === 'new') {
-		const itemsToDisplay: ListItem[] = [];
-		// focus only here
-
-		return (
-			<>
-				<NoteHeader />
-
-				<IonContent
-					forceOverscroll={false}
-				>
-					<_List>
-						<ListTitle
-							placeholder="Title"
-							value={list.title}
-							onChange={e => dispatch({ type: ActionType.updateTitle, payload: e.target.value })}
-						/>
-						<PaddedList>
-							{itemsToDisplay.map(item => (
-								<_ListItem key={item.id}>
-									<IonIcon name="square-outline" mode="md" />
-									<S.ListItemContent>{item.content}</S.ListItemContent>
-								</_ListItem>
-							))}
-						</PaddedList>
-						{/*<NoteContent
-							// ref={contentRef}
-							placeholder="Take a list..."
-							// value={list.content}
-							// onChange={e => dispatch({ type: ActionType.updateContent, payload: e.target.value })}
-						/>*/}
-					</_List>
-				</IonContent>
-			</>
-		);
-	}
-
-	if (!listFromState) {
+	if (listId !== 'new' && !listFromState) {
 		history.replace('/home');
 		return null;
 	}
