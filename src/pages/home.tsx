@@ -16,7 +16,7 @@ import { useStore } from '../state/store';
 // DONE: footer avec "☑"
 // DONE: liste des listes
 // TODO: créer une liste
-// TODO: modifier une liste
+// HALF-DONE: modifier une liste
 // TODO: toggle switch format masonry/liste
 // TODO: recherche
 // TODO: notification rappel (date précise ou "dans 1 jour"?)

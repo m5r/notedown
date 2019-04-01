@@ -82,6 +82,11 @@ const PaddedList = styled(S.List)`
 	padding: 0 16px 16px;
 `;
 
+// 	TODO HERE:
+//		both: style textarea 1 ligne
+// 		edit: nouvel item
+//		new : tout
+
 const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history, match }) => {
 	useAuthentication();
 
