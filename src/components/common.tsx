@@ -51,12 +51,31 @@ const ListItemContent = styled.span`
     align-items: center;
 `;
 
+const ListItemTitle = styled.div`
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5rem;
+`;
+
+const ListItemCard = styled.div`
+    min-height: 110px;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+    box-sizing: border-box;
+	word-break: break-word;
+`;
+
 const S = {
 	StartingPageContainer,
 	StartingPageContent,
 	List,
 	ListItem,
 	ListItemContent,
+	ListItemTitle,
+	ListItemCard,
 };
 
 export default S;

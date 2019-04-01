@@ -277,6 +277,16 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 		dispatch({ type: ActionType.updateItem, payload: nextItem });
 	}
 
+	function onAddListItem() {
+		const newItem: ListItem = {
+			id: uuidv4(),
+			isDone: false,
+			content: '',
+		};
+
+		dispatch({ type: ActionType.addItem, payload: newItem });
+	}
+
 	return (
 		<>
 			<NoteHeader />
@@ -300,7 +310,7 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 							/>
 						))}
 
-						<_AddListItem>
+						<_AddListItem onClick={onAddListItem}>
 							<IonIcon name="add" mode="md" />
 							<S.ListItemContent>List item</S.ListItemContent>
 						</_AddListItem>

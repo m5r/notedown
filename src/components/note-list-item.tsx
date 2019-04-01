@@ -1,9 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { IonIcon } from '@ionic/react';
 
-import S from './common';
+import NoteListItemText from './note-list-item-text';
+import NoteListItemList from './note-list-item-list';
 
 import { Note, NoteType } from '../state/notes';
 
@@ -11,83 +9,16 @@ type Props = {
 	note: Note;
 }
 
-const Title = styled.div`
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.5rem;
-`;
-
-const Content = styled.p`
-    font-size: 1.125rem;
-    font-weight: 400;
-    line-height: 1.5rem;
-`;
-
-const Card = styled.div`
-    min-height: 110px;
-    padding: 12px 16px;
-    border: 1px solid #e0e0e0;
-    overflow: hidden;
-    position: relative;
-    border-radius: 8px;
-    box-sizing: border-box;
-	word-break: break-word;
-`;
-
-const BottomCardMessage = styled.div`
-	padding-top: 8px;
-`;
-
-const TruncatedListItemContent = styled(S.ListItemContent)`
-	display: -webkit-box;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-`;
-
 const NoteListItem: FunctionComponent<Props> = ({ note }) => {
 	if (note.type === NoteType.Text) {
 		return (
-			<Link to={`/note/${note.id}`}>
-				<Card>
-					<Title>
-						{note.title}
-					</Title>
-					<Content>
-						{note.content}
-					</Content>
-				</Card>
-			</Link>
+			<NoteListItemText note={note} />
 		);
 	}
 
 	if (note.type === NoteType.List) {
-		const itemsToDisplay = note.items.filter(item => !item.isDone);
-		const hiddenItemsCount = note.items.length - itemsToDisplay.length;
-		const bottomCardMessage = `+${hiddenItemsCount} checked item${hiddenItemsCount > 1 ? 's' : ''}`;
-
 		return (
-			<Link to={`/list/${note.id}`}>
-				<Card>
-					<Title>
-						{note.title}
-					</Title>
-					<S.List>
-						{itemsToDisplay.map(item => (
-							<S.ListItem key={item.id}>
-								<IonIcon name="square-outline" mode="md" />
-								<TruncatedListItemContent>{item.content}</TruncatedListItemContent>
-							</S.ListItem>
-						))}
-						{hiddenItemsCount > 0 && (
-							<BottomCardMessage>
-								{bottomCardMessage}
-							</BottomCardMessage>
-						)}
-					</S.List>
-				</Card>
-			</Link>
+			<NoteListItemList note={note} />
 		);
 	}
 
