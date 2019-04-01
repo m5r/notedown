@@ -13,21 +13,21 @@ import { Link } from 'react-router-dom';
 // DONE: footer avec "Take a note..."
 // DONE: créer une note
 // DONE: modifier une note
-// HALF-DONE: swipe left/right les notes pour les supprimer
+// TODO: swipe left/right les notes pour les supprimer
 // DONE: footer avec "☑"
 // DONE: liste des listes
 // DONE: créer une liste
 // DONE: modifier une liste
-// TODO: toggle switch format masonry/liste
 // TODO: recherche
+// TODO: speech to text
 // DONE: notification rappel (date précise ou "dans 1 jour"?)
 
 // DONE: nicer fonts
 // DONE: login/signup feedback (loading animation)
 // TODO: app icon
 // TODO: app launcher
-// TODO: pages transitions
-// TODO: cancel/redo
+// TODO???: pages transitions
+// TODO???: cancel/redo
 
 const _Home = styled.div`
 	display: flex;
