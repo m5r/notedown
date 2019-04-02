@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import S from './common';
 
 import { Text } from '../state/notes';
+import { vibrationFeedback } from '../utils';
 
 type Props = {
 	note: Text;
@@ -17,7 +18,7 @@ const Content = styled.p`
 `;
 
 const NoteListItemText: FunctionComponent<Props> = ({ note }) => (
-	<Link to={`/note/${note.id}`}>
+	<Link to={`/note/${note.id}`} onClick={() => vibrationFeedback()}>
 		<S.ListItemCard>
 			<S.ListItemTitle>
 				{note.title}

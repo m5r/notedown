@@ -1,5 +1,5 @@
 import { RefObject, useEffect } from 'react';
-import { LocalNotification, LocalNotificationScheduleResult, Plugins } from '@capacitor/core';
+import { HapticsImpactStyle, LocalNotification, LocalNotificationScheduleResult, Plugins } from '@capacitor/core';
 
 import { NoteType } from './state/notes';
 
@@ -33,6 +33,7 @@ type NotificationExtra = {
 
 // Pas réussi à se servir des extras pour afficher directement la page de la note dont on vient d'etre notifié
 const pendingNotification = { current: null };
+
 export async function useNotifications(): Promise<RefObject<NotificationExtra | null>> {
 	if (await areNotificationsAvailable()) {
 		Plugins.LocalNotifications!.addListener('localNotificationActionPerformed', (n) => {
@@ -54,5 +55,11 @@ export async function registerNotification(notification: LocalNotification): Pro
 		};
 
 		return Plugins.LocalNotifications!.schedule(options);
+	}
+}
+
+export function vibrationFeedback() {
+	if (Plugins.Haptics) {
+		Plugins.Haptics.impact({ style: HapticsImpactStyle.Light });
 	}
 }

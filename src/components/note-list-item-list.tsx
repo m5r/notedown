@@ -7,6 +7,7 @@ import S from './common';
 import TruncatedListItemContent from './truncated-list-item-content';
 
 import { List } from '../state/notes';
+import { vibrationFeedback } from '../utils';
 
 type Props = {
 	note: List;
@@ -23,7 +24,7 @@ const NoteListItemList: FunctionComponent<Props> = ({ note }) => {
 	const bottomCardMessage = `+${hiddenItemsCount} checked item${hiddenItemsCount > 1 ? 's' : ''}`;
 
 	return (
-		<Link to={`/list/${note.id}`}>
+		<Link to={`/list/${note.id}`} onClick={() => vibrationFeedback()}>
 			<S.ListItemCard>
 				<S.ListItemTitle>
 					{note.title}
