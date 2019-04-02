@@ -4,9 +4,9 @@ Par Mokhtar MIAL et Rana SHERIF
 
 ## Contexte
 
-Au cours de l'année du M2 Génie Informatique à l'Université Grenoble Alpes, nous avons été amenés à développer une application native à l'aide d'Ionic et de Firebase.
+Au cours de l'année du M2 Génie Informatique à l'Université Grenoble Alpes, on a été amenés à développer une application native à l'aide d'Ionic et de Firebase.
 
-Nous avons choisi de diverger *légerement* des todo lists et de développer une application de prise de note avec la meilleure expérience utilisateur qu'on puisse proposer dans les délais imposés.
+On a choisi de diverger *légerement* des todo lists habituelles et de développer une application de prise de note avec la meilleure expérience utilisateur qu'on puisse proposer dans les délais imposés.
 
 ## Stack technique
 
@@ -17,14 +17,26 @@ L'authentification se fait via Firebase Authentication et le données sont stock
 ## Fonctionnalités implémentées
 
  * Authentification basique (email/password)
- * SSO Facebook
- * SSO Google
  * Stockage des données dans Firebase Cloud Firestore
  * Rappel d'une note via une notification
 
 ## Fonctionnaltiés dont l'implémentation a échoué
 
- * L'ouverture de la note
+##### SSO Facebook et Google
+
+L'intégration du plugin officiel Ionic Native de Firebase est immature et manque de compatibilité avec leur système de "Capacitor" permettant soit-disant une intégration facile de la majorité des plugins déjà existants...
+
+On a essayé de gruger en utilisant le Firebase SDK pour le Web en modifiant le `redirect_uri` pour le faire pointer vers l'application avec notre `custom_url_scheme` (io.ionic.starter://) mais Firebase n'autorise pas la modification de cette option.
+
+Le SSO fonctionne donc seulement en mode Web.
+
+##### L'ouverture de la note dont on vient d'etre rappelé par la notification
+
+Pour continuer sur notre lancée de meilleure UX possible, quand on reçoit la notification programmée d'une note, on aurait aimé qu'ouvrir la notification ouvrirait directement la note en question dans l'application.
+
+On a trouvé comment récupérer l'`extra` de la notification et comment en faire usage mais l'intégration de cette feature prenait trop de temps car l'application se retrouvait entre plusieurs conflits d'état (j'ai fini de chargé l'application ? je suis connecté ? j'ai fini de charger mes notes ? est-ce que j'ouvre la note avant d'etre sur d'etre connecté ?)
+
+Étant donné la valeur ajoutée et les priorités des autres features, on a décidé de déprioriser celle-ci.
 
 ## Getting started
 
@@ -32,8 +44,8 @@ Vous aurez besoin de:
  * git
  * nodejs (testé la version 11.13.0)
  * npm (testé la version 6.9.0)
- * Android Studio (testé avec la version )
- * Android SDK (testé avec la version )
+ * Android Studio (testé avec la version 3.2.1)
+ * Android SDK (testé avec la version 28, smartphone sous Android 9)
  
 Renseignez le chemin vers votre installation d'Android Studio dans le champs `linuxAndroidStudioPath` du fichier `capacitor.config.json` qui se trouve à la racine du projet.
 
@@ -57,4 +69,3 @@ npx ionic capacitor copy
 On exécute `npx ionic capacitor open android` pour ouvrir Android Studio
 
 Une fois ouvert, on compile l'application comme n'importe quelle autre application Android.
-

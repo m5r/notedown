@@ -24,8 +24,8 @@ import { Link } from 'react-router-dom';
 
 // DONE: nicer fonts
 // DONE: login/signup feedback (loading animation)
-// TODO: app icon
-// TODO: app launcher
+// DONE: app icon
+// DONE: app launcher (splash screen)
 // TODO???: pages transitions
 // TODO???: cancel/redo
 

@@ -26,8 +26,12 @@ export class FirebaseService {
 		}
 
 		this.auth = app.auth();
+
 		this.googleProvider = new app.auth.GoogleAuthProvider();
+		this.googleProvider.setCustomParameters({ 'redirect_uri': 'io.ionic.starter://ok '});
+
 		this.facebookProvider = new app.auth.FacebookAuthProvider();
+
 		this.db = app.firestore();
 	}
 
@@ -48,8 +52,9 @@ export class FirebaseService {
 		const test = await FirebaseAuthentication.useAppLanguage();
 		const isWeb = test.error === 'cordova_not_available';
 
+		// pour utiliser le Firebase SDK Web sur l'appli native, commenter les lignes 56 et 58
 		if (isWeb) {
-			return this.auth.signInWithPopup(this.googleProvider);
+			return this.auth.signInWithRedirect(this.googleProvider);
 		}
 
 		return FirebaseAuthentication.signInWithGoogle('1:353275719484:android:764d2cb7da3280eb', 'AIzaSyBIzjdn-8BYKUnHiXFt_UsC6TGSZq7cNNA-8BYKUnHiXFt_UsC6TGSZq7cNNA');
@@ -60,7 +65,7 @@ export class FirebaseService {
 		const isWeb = test.error === 'cordova_not_available';
 
 		if (isWeb) {
-			return this.auth.signInWithPopup(this.facebookProvider);
+			return this.auth.signInWithRedirect(this.facebookProvider);
 		}
 
 		return FirebaseAuthentication.signInWithFacebook('7078a53ee9d7b9012351e61ce75e701a');

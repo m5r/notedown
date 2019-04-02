@@ -1,7 +1,8 @@
 {
   "name": "NoteDown",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "custom"
 }
