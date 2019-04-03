@@ -89,3 +89,15 @@ npx ionic capacitor copy
 On exécute `npx ionic capacitor open android` pour ouvrir Android Studio
 
 Une fois ouvert, on compile l'application comme n'importe quelle autre application Android.
+
+## Export des règles Firebase
+
+```
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth.uid != null;
+    }
+  }
+}
+```
