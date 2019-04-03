@@ -19,6 +19,7 @@ L'authentification se fait via Firebase Authentication et le données sont stock
  * Authentification basique (email/password)
  * Stockage des données dans Firebase Cloud Firestore
  * Rappel d'une note via une notification
+ * Intégration continue avec Travis
 
 ## Fonctionnaltiés dont l'implémentation a échoué
 
