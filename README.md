@@ -38,6 +38,10 @@ On a trouvé comment récupérer l'`extra` de la notification et comment en fair
 
 Étant donné la valeur ajoutée et les priorités des autres features, on a décidé de déprioriser celle-ci.
 
+#### Monétisation avec AdMob
+
+L'utilisation du plugin et des composants AdMob s'est déroulée correctement mais la pub ne s'affiche pas. On a manqué de temps pour approfondir le debug de cette feature.
+
 ## Points notables d'UX
 
  * Affichage sobre

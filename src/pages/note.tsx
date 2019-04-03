@@ -13,6 +13,7 @@ import { useStore, useActions } from '../state/store';
 import { useAuthentication } from '../firebase/hooks';
 import { Text, NoteType } from '../state/notes';
 import { useBackButton } from '../utils';
+import Ad from '../components/ad';
 
 type RouteParams = {
 	noteId: string;
@@ -200,6 +201,8 @@ const NotePage: FunctionComponent<RouteComponentProps<RouteParams>> = ({ history
 					/>
 				</_Note>
 			</IonContent>
+
+			<Ad />
 		</>
 	);
 };

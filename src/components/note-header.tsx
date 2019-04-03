@@ -48,15 +48,17 @@ const NoteHeader: FunctionComponent<Props> = ({ history, match, note }) => {
 	}
 
 	async function handleDeleteButtonClick() {
-		if (Plugins.Modals) {
-			const result = await Plugins.Modals.confirm({
-				title: 'You are about to delete this note',
-				message: 'Are you sure you want to delete it ?',
-			});
+		if (!Plugins.Modals) {
+			return;
+		}
 
-			if (!result.value) {
-				return;
-			}
+		const result = await Plugins.Modals.confirm({
+			title: 'You are about to delete this note',
+			message: 'Are you sure you want to delete it ?',
+		});
+
+		if (!result.value) {
+			return;
 		}
 
 		history.replace('/home');

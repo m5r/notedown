@@ -18,6 +18,7 @@
     "babel-plugin-named-asset-import": "0.3.1",
     "babel-preset-react-app": "7.0.2",
     "bfj": "6.1.1",
+    "capacitor-admob": "0.0.8",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "cordova-plugin-firebase-authentication": "^1.1.2",
     "cordova-support-android-plugin": "^1.0.1",
